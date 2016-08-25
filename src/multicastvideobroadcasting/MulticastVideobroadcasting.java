@@ -6,6 +6,8 @@
 
 package multicastvideobroadcasting;
 
+import view.AdminLogin;
+
 /**
  *
  * @author Jithinpv
@@ -17,6 +19,8 @@ public class MulticastVideobroadcasting {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        AdminLogin adminLogin=new AdminLogin();
+        adminLogin.setVisible(true);
     }
     
 }
