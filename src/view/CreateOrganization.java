@@ -17,6 +17,7 @@ public class CreateOrganization extends javax.swing.JFrame {
      */
     public CreateOrganization() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
