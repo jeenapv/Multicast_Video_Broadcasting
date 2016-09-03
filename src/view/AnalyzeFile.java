@@ -3,8 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,6 +43,11 @@ public class AnalyzeFile extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("FILE DETAILS");
 
@@ -113,16 +123,30 @@ public class AnalyzeFile extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        CreateNewPresentation createNewPresentation=new CreateNewPresentation();
+        CreateNewPresentation createNewPresentation = new CreateNewPresentation();
         createNewPresentation.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        ResultSet rs = dbcon.select("select max(id) from tbl_create_presentation");
+        try {
+            if (rs.next()) {
+                String id=rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments

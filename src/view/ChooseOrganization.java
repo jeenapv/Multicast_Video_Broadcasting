@@ -23,8 +23,8 @@ public class ChooseOrganization extends javax.swing.JFrame {
         loadIcons();
     }
     private void loadIcons() {
-        Configuration.setIconOnLabel("Untitled-1.png", jLabel4);
-        Configuration.setIconOnLabel("Untitled-2.png", jLabel5);
+        Configuration.setIconOnLabel("leftArrow.png", jLabel4);
+        Configuration.setIconOnLabel("rightArrow.png", jLabel5);
     }
 
     /**

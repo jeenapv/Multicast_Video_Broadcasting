@@ -8,6 +8,9 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowOpened" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowOpened"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -32,7 +35,7 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="list1" min="-2" pref="111" max="-2" attributes="0"/>
+                      <Component id="state_list" min="-2" pref="111" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel4" min="-2" pref="146" max="-2" attributes="0"/>
@@ -42,7 +45,7 @@
                   </Group>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="list2" min="-2" pref="111" max="-2" attributes="0"/>
+                  <Component id="selected_states" min="-2" pref="111" max="-2" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabel3" min="-2" pref="95" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
@@ -83,7 +86,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Component id="list1" min="-2" pref="157" max="-2" attributes="0"/>
+                              <Component id="state_list" min="-2" pref="157" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
@@ -94,7 +97,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <Component id="list2" min="-2" pref="157" max="-2" attributes="0"/>
+                  <Component id="selected_states" min="-2" pref="157" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="50" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -117,9 +120,9 @@
         <Property name="text" type="java.lang.String" value="All States"/>
       </Properties>
     </Component>
-    <Component class="java.awt.List" name="list1">
+    <Component class="java.awt.List" name="state_list">
     </Component>
-    <Component class="java.awt.List" name="list2">
+    <Component class="java.awt.List" name="selected_states">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
@@ -143,8 +146,14 @@
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel4MouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel5MouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

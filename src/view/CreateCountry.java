@@ -6,6 +6,10 @@
 
 package view;
 
+import db.Dbcon;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+
 /**
  *
  * @author Jithinpv
@@ -49,6 +53,11 @@ public class CreateCountry extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton1.setText("OK");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("CREATE COUNTRY");
 
@@ -115,6 +124,17 @@ public class CreateCountry extends javax.swing.JFrame {
         AdminHome adminHome=new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String country=jTextField1.getText();
+        String description=jTextArea1.getText();
+        Dbcon dbcon=new Dbcon();
+        int ins=dbcon.insert("insert into tbl_country(country_name,description,created_at)values('"+country+"','"+description+"','"+System.currentTimeMillis()+"')");
+        if(ins>0){
+            JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

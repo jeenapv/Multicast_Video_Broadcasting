@@ -3,14 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import db.Dbcon;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import static view.CreateOrganization.path;
 
 /**
  *
  * @author Jithinpv
  */
 public class CreateNewPresentation extends javax.swing.JFrame {
+
+    public static String filePath = "";
+    public static String fileName = "";
+    public static long size;
 
     /**
      * Creates new form CreateNewPresentation
@@ -44,6 +58,11 @@ public class CreateNewPresentation extends javax.swing.JFrame {
         jLabel2.setText("Choose File:");
 
         jButton1.setText("Browse");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("OR");
 
@@ -70,17 +89,16 @@ public class CreateNewPresentation extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(133, 133, 133))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addComponent(jButton3))
@@ -121,17 +139,49 @@ public class CreateNewPresentation extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        this.dispose();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        AnalyzeFile analyzeFile=new AnalyzeFile();
+        Dbcon dbcon = new Dbcon();
+        int ins=dbcon.insert("insert into tbl_create_presentation(file_path,file_name,file_size,created_at)values('"+filePath+"','"+fileName+"','"+size+"','"+System.currentTimeMillis()+"')");
+        if(ins>0){
+            
+             this.dispose();
+        AnalyzeFile analyzeFile = new AnalyzeFile();
         analyzeFile.setVisible(true);
+        }
+        
+       
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG & GIF Images", "jpg", "gif");
+
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            filePath = chooser.getSelectedFile().getPath();
+            fileName = chooser.getSelectedFile().getName();
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File(filePath));
+                Image scaledInstance = img.getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon imageIcon = new ImageIcon(scaledInstance);
+                jLabel4.setIcon(imageIcon);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+             size = (chooser.getSelectedFile().length()) / 1024;
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

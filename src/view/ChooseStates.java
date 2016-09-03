@@ -7,13 +7,19 @@
 package view;
 
 import General.Configuration;
+import db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Jithinpv
  */
 public class ChooseStates extends javax.swing.JFrame {
-
+    ArrayList<String> countryIds;
     /**
      * Creates new form ChooseStates
      */
@@ -21,10 +27,34 @@ public class ChooseStates extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         loadIcons();
+        loadAllStates(countryIds);
     }
+    
+     public ChooseStates( ArrayList<String> countryIds) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.countryIds = countryIds;
+        loadIcons();
+        loadAllStates(countryIds);
+    }
+     
     private void loadIcons() {
-        Configuration.setIconOnLabel("Untitled-1.png", jLabel4);
-        Configuration.setIconOnLabel("Untitled-2.png", jLabel5);
+        Configuration.setIconOnLabel("leftArrow.png", jLabel4);
+        Configuration.setIconOnLabel("rightArrow.png", jLabel5);
+        
+    }
+    private void loadAllStates(ArrayList<String> countryIds) {
+        Dbcon dbcon=new Dbcon();
+        ResultSet rs=dbcon.select("select state_name from tbl_state");
+        try {
+            while(rs.next()){
+                String stateName=rs.getString("state_name");
+                state_list.addItem(stateName);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
     }
 
     /**
@@ -38,8 +68,8 @@ public class ChooseStates extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        list1 = new java.awt.List();
-        list2 = new java.awt.List();
+        state_list = new java.awt.List();
+        selected_states = new java.awt.List();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -47,6 +77,11 @@ public class ChooseStates extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Choose States:");
 
@@ -68,6 +103,18 @@ public class ChooseStates extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+        });
+
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -80,14 +127,14 @@ public class ChooseStates extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(state_list, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(list2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(selected_states, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)))
@@ -119,14 +166,14 @@ public class ChooseStates extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(state_list, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(12, 12, 12))))
-                    .addComponent(list2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(selected_states, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -150,6 +197,32 @@ public class ChooseStates extends javax.swing.JFrame {
         ChooseOrganization chooseOrganization=new ChooseOrganization();
         chooseOrganization.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        if(state_list.getSelectedIndex()<0){
+            JOptionPane.showMessageDialog(rootPane, "select a state");
+        }else{
+           String selectedItem= state_list.getSelectedItem();
+           selected_states.addItem(selectedItem);
+           state_list.remove(selectedItem);
+        }
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
+        if(selected_states.getSelectedIndex()<0){
+            JOptionPane.showMessageDialog(rootPane, "select a state");
+        }else{
+             String selectedItem= selected_states.getSelectedItem();
+             selected_states.remove(selectedItem);
+             state_list.addItem(selectedItem);
+        }
+    }//GEN-LAST:event_jLabel4MouseClicked
 
     /**
      * @param args the command line arguments
@@ -194,7 +267,7 @@ public class ChooseStates extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private java.awt.List list1;
-    private java.awt.List list2;
+    private java.awt.List selected_states;
+    private java.awt.List state_list;
     // End of variables declaration//GEN-END:variables
 }

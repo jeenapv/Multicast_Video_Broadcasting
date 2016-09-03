@@ -3,14 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import db.Dbcon;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author Jithinpv
  */
 public class CreateOrganization extends javax.swing.JFrame {
+
+    public static String path = "";
 
     /**
      * Creates new form CreateOrganization
@@ -50,14 +66,15 @@ public class CreateOrganization extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Choose Country:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel2.setText("Choose State:");
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel3.setText("Organization Name:");
 
@@ -70,6 +87,11 @@ public class CreateOrganization extends javax.swing.JFrame {
         jLabel5.setText("Icon:");
 
         jButton1.setText("Browse");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -78,6 +100,11 @@ public class CreateOrganization extends javax.swing.JFrame {
         jLabel8.setText("Port:");
 
         jButton2.setText("OK");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("BACK");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -159,7 +186,7 @@ public class CreateOrganization extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
@@ -184,9 +211,101 @@ public class CreateOrganization extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG & GIF Images", "jpg", "gif");
+
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            path = chooser.getSelectedFile().getPath();
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File(path));
+                Image scaledInstance = img.getScaledInstance(jLabel6.getWidth(), jLabel6.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon imageIcon = new ImageIcon(scaledInstance);
+                jLabel6.setIcon(imageIcon);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            long size = (chooser.getSelectedFile().length()) / 1024;
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+       
+        ResultSet rs = dbcon.select("select * from tbl_country");
+        try {
+            while (rs.next()) {
+                //String country_name=rs.getString(2);
+                //id1 = rs.getString(1);
+                jComboBox1.addItem(rs.getString(2));
+            }
+        } catch (SQLException ex) {
+
+        }
+        //System.out.println(id1);
+      
+        ResultSet r = dbcon.select("select * from tbl_state");
+        try {
+            while (r.next()) {
+                //String country_name=rs.getString(2);
+                
+                jComboBox2.addItem(r.getString(2));
+            }
+        } catch (SQLException ex) {
+
+        }
+
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String organization_name = jTextField1.getText();
+        String description = jTextArea1.getText();
+        String ip=jTextField2.getText();
+        String port=jTextField3.getText();
+        String country=jComboBox1.getSelectedItem().toString();
+        
+        String state=jComboBox2.getSelectedItem().toString();
+         Dbcon dbcon = new Dbcon();
+         String id1="",id2="";
+         ResultSet rs=dbcon.select("select * from tbl_country where country_name='"+country+"'");
+          try {
+            while (rs.next()) {
+                //String country_name=rs.getString(2);
+                id1 = rs.getString(1);
+               
+            }
+        } catch (SQLException ex) {
+
+           }  
+          ResultSet r = dbcon.select("select * from tbl_state where state_name='" + state + "'");
+        try {
+            while (r.next()) {
+                id2 = r.getString(1);
+               
+            }
+        } catch (SQLException ex) {
+
+        }
+        int ins= dbcon.insert("insert into tbl_organization(organization_name,country,state,description,icon,ip_address,port,created_at)values('"+organization_name+"','"+id1+"','"+id2+"','"+description+"','"+path+"','"+ip+"','"+port+"','"+System.currentTimeMillis()+"')");
+        if(ins>0){
+            JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+        }
+      
+          
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

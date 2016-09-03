@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import db.Dbcon;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -94,15 +97,35 @@ public class AdminLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        AdminHome adminHome=new AdminHome();
-        adminHome.setVisible(true);
+        String userName = jTextField1.getText();
+        String password = new String(jPasswordField1.getPassword());
+        if (userName.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter username");
+        } else if (password.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter password");
+        } else {
+            Dbcon dbcon = new Dbcon();
+            ResultSet rs = dbcon.select("select * from tbl_admin where admin_name='" + userName + "' and password='" + password + "'");
+            try {
+                if (rs.next()) {
+                    this.dispose();
+                    AdminHome adminHome = new AdminHome();
+                    adminHome.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Invalid Details");
+                }
+            } catch (Exception e) {
+
+            }
+        }
+
+    
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+/**
+ * @param args the command line arguments
+ */
+public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -113,16 +136,32 @@ public class AdminLogin extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                }
+                
+
+}
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminLogin.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } 
+
+catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AdminLogin.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } 
+
+catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AdminLogin.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } 
+
+catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdminLogin.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

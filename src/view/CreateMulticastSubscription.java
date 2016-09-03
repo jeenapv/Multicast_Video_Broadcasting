@@ -6,6 +6,9 @@
 
 package view;
 
+import db.Dbcon;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Jithinpv
@@ -160,6 +163,13 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String subscription_name=jTextField1.getText();
+        String description=jTextArea1.getText();
+        Dbcon dbcon=new Dbcon();
+        int ins=dbcon.insert("insert into tbl_subscription(subscription_name,description,created_at)values('"+subscription_name+"','"+description+"','"+System.currentTimeMillis()+"')");
+        if(ins>0){
+            JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -6,6 +6,13 @@
 
 package view;
 
+import db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Jithinpv
@@ -41,10 +48,13 @@ public class CreateState extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Select Country:");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel2.setText("State Name:");
 
@@ -68,7 +78,7 @@ public class CreateState extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("CREATE ORGANIZATION");
+        jLabel4.setText("CREATE STATE");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +136,26 @@ public class CreateState extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-       
+        Dbcon dbcon=new Dbcon();
+          String name=jTextField1.getText();
+        String description=jTextArea1.getText();
+        String country=jComboBox1.getSelectedItem().toString();
+        String id="";
+         ResultSet rs=dbcon.select("select * from tbl_country where country_name='"+country+"'");
+        try {
+            if(rs.next()){
+                id=rs.getString(1);
+                
+            }
+        } catch (SQLException ex) {
+          
+        }
+      
+        
+        int ins=dbcon.insert("insert into tbl_state(state_name,country,description,created_at)values('"+name+"','"+id+"','"+description+"','"+System.currentTimeMillis()+"')");
+        if(ins>0){
+            JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -135,6 +164,21 @@ public class CreateState extends javax.swing.JFrame {
         AdminHome adminHome=new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
+        // TODO add your handling code here:
+         Dbcon dbcon=new Dbcon();
+        ResultSet rs=dbcon.select("select * from tbl_country");
+        try {
+            while(rs.next()){
+                //String country_name=rs.getString(2);
+                jComboBox1.addItem(rs.getString(2));
+            }
+        } catch (SQLException ex) {
+          
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
