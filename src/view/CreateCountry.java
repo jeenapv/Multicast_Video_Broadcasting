@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
@@ -120,20 +123,30 @@ public class CreateCountry extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        this.dispose();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String country=jTextField1.getText();
-        String description=jTextArea1.getText();
-        Dbcon dbcon=new Dbcon();
-        int ins=dbcon.insert("insert into tbl_country(country_name,description,created_at)values('"+country+"','"+description+"','"+System.currentTimeMillis()+"')");
-        if(ins>0){
-            JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+        String country = jTextField1.getText();
+        String description = jTextArea1.getText();
+        Dbcon dbcon = new Dbcon();
+        ResultSet rs = dbcon.select("select * from tbl_country where country_name='"+country+"'");
+        try {
+            if(rs.next()) {
+                JOptionPane.showMessageDialog(rootPane, "already existing country");
+                } else {
+                    int ins = dbcon.insert("insert into tbl_country(country_name,description,created_at)values('" + country + "','" + description + "','" + System.currentTimeMillis() + "')");
+                    if (ins > 0) {
+                        JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+                    }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
