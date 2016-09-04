@@ -288,7 +288,7 @@ public class CreateOrganization extends javax.swing.JFrame {
         } catch (SQLException ex) {
 
            }  
-          ResultSet r = dbcon.select("select * from tbl_state where state_name='" + state + "'");
+          ResultSet r = dbcon.select("select * from tbl_state where state_name='"+ state + "'");
         try {
             while (r.next()) {
                 id2 = r.getString(1);
