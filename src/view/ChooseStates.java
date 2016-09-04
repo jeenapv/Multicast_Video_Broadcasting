@@ -46,7 +46,20 @@ public class ChooseStates extends javax.swing.JFrame {
     private void loadAllStates(ArrayList<String> countryIds) {
         System.out.println(countryIds);
         Dbcon dbcon=new Dbcon();
-        ResultSet rs=dbcon.select("select state_name from tbl_state where country ");
+        String string="";
+        for(int i=0;i<countryIds.size();i++){
+         
+            countryIds.get(i);
+            if(i==(countryIds.size()-1)){
+                 string=string+countryIds.get(i);
+            }else{
+                string=string+countryIds.get(i)+",";
+            }
+           System.out.println(string);
+      }
+        String query="select state_name from tbl_state where country in ("+string+") ";
+        System.out.println(query);
+        ResultSet rs=dbcon.select(query);
         try {
             while(rs.next()){
                 String stateName=rs.getString("state_name");
@@ -57,6 +70,8 @@ public class ChooseStates extends javax.swing.JFrame {
         }
         
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
