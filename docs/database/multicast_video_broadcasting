@@ -1,0 +1,119 @@
+/*
+SQLyog Community Edition- MySQL GUI v8.03 
+MySQL - 5.1.32-community : Database - multicast_video_broadcasting
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`multicast_video_broadcasting` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `multicast_video_broadcasting`;
+
+/*Table structure for table `tbl_admin` */
+
+DROP TABLE IF EXISTS `tbl_admin`;
+
+CREATE TABLE `tbl_admin` (
+  `admin_name` varchar(10) DEFAULT NULL,
+  `password` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_country` */
+
+DROP TABLE IF EXISTS `tbl_country`;
+
+CREATE TABLE `tbl_country` (
+  `country_id` int(20) NOT NULL AUTO_INCREMENT,
+  `country_name` varchar(100) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `created_at` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`country_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_create_presentation` */
+
+DROP TABLE IF EXISTS `tbl_create_presentation`;
+
+CREATE TABLE `tbl_create_presentation` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `file_path` varchar(50) DEFAULT NULL,
+  `file_name` varchar(50) DEFAULT NULL,
+  `file_size` varchar(50) DEFAULT NULL,
+  `created_at` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_launch_presentation` */
+
+DROP TABLE IF EXISTS `tbl_launch_presentation`;
+
+CREATE TABLE `tbl_launch_presentation` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `presentation_id` int(20) DEFAULT NULL,
+  `subscription_id` int(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_organization` */
+
+DROP TABLE IF EXISTS `tbl_organization`;
+
+CREATE TABLE `tbl_organization` (
+  `organization_id` int(20) NOT NULL AUTO_INCREMENT,
+  `organization_name` varchar(100) DEFAULT NULL,
+  `country` int(20) DEFAULT NULL,
+  `state` int(20) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `icon` varchar(100) DEFAULT NULL,
+  `ip_address` varchar(50) DEFAULT NULL,
+  `port` varchar(50) DEFAULT NULL,
+  `created_at` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`organization_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_state` */
+
+DROP TABLE IF EXISTS `tbl_state`;
+
+CREATE TABLE `tbl_state` (
+  `state_id` int(20) NOT NULL AUTO_INCREMENT,
+  `state_name` varchar(100) DEFAULT NULL,
+  `country` int(50) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `created_at` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`state_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_subscription` */
+
+DROP TABLE IF EXISTS `tbl_subscription`;
+
+CREATE TABLE `tbl_subscription` (
+  `id` int(50) NOT NULL AUTO_INCREMENT,
+  `subscription_name` varchar(100) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `created_at` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_subscription_list` */
+
+DROP TABLE IF EXISTS `tbl_subscription_list`;
+
+CREATE TABLE `tbl_subscription_list` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `organization_id` int(20) DEFAULT NULL,
+  `state_id` int(20) DEFAULT NULL,
+  `country_id` int(20) DEFAULT NULL,
+  `subscription_id` int(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
