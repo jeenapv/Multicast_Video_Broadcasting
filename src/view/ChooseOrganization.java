@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import General.Configuration;
@@ -19,6 +18,8 @@ import javax.swing.JOptionPane;
  */
 public class ChooseOrganization extends javax.swing.JFrame {
 
+    ArrayList<String> stateIds;
+
     /**
      * Creates new form ChooseOrganization
      */
@@ -26,25 +27,46 @@ public class ChooseOrganization extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         loadIcons();
-        loadAllOrganization();
+        loadAllOrganization(stateIds);
     }
+
+    public ChooseOrganization(ArrayList<String> stateIds) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.stateIds = stateIds;
+        loadIcons();
+        loadAllOrganization(stateIds);
+    }
+
     private void loadIcons() {
         Configuration.setIconOnLabel("leftArrow.png", jLabel4);
         Configuration.setIconOnLabel("rightArrow.png", jLabel5);
     }
-     private void loadAllOrganization() {
-        
-        Dbcon dbcon=new Dbcon();
-        ResultSet rs=dbcon.select("select organization_name from tbl_organization");
+
+    private void loadAllOrganization(ArrayList<String> stateIds) {
+        System.out.println(stateIds);
+        Dbcon dbcon = new Dbcon();
+        String string = "";
+        for (int i = 0; i < stateIds.size(); i++) {
+
+            stateIds.get(i);
+            if (i == (stateIds.size() - 1)) {
+                string = string + stateIds.get(i);
+            } else {
+                string = string + stateIds.get(i) + ",";
+            }
+          //  System.out.println(string);
+        }
+        ResultSet rs = dbcon.select("select organization_name from tbl_organization where state in (" + string + ")");
         try {
-            while(rs.next()){
-                String orgName=rs.getString("organization_name");
+            while (rs.next()) {
+                String orgName = rs.getString("organization_name");
                 org_list.addItem(orgName);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
+
     }
 
     /**
@@ -169,36 +191,36 @@ public class ChooseOrganization extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        ChooseStates chooseStates=new ChooseStates();
+        ChooseStates chooseStates = new ChooseStates();
         chooseStates.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        CreateMulticastSubscription createMulticastSubscription=new CreateMulticastSubscription();
+        CreateMulticastSubscription createMulticastSubscription = new CreateMulticastSubscription();
         createMulticastSubscription.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         // TODO add your handling code here:
-        if(org_list.getSelectedIndex()<0){
+        if (org_list.getSelectedIndex() < 0) {
             JOptionPane.showMessageDialog(rootPane, "select a organization");
-        }else{
-           String selectedItem= org_list.getSelectedItem();
-           selected_org.addItem(selectedItem);
-           org_list.remove(selectedItem);
+        } else {
+            String selectedItem = org_list.getSelectedItem();
+            selected_org.addItem(selectedItem);
+            org_list.remove(selectedItem);
         }
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         // TODO add your handling code here:
-         if(selected_org.getSelectedIndex()<0){
+        if (selected_org.getSelectedIndex() < 0) {
             JOptionPane.showMessageDialog(rootPane, "select a organization");
-        }else{
-             String selectedItem= selected_org.getSelectedItem();
-             selected_org.remove(selectedItem);
-             org_list.addItem(selectedItem);
+        } else {
+            String selectedItem = selected_org.getSelectedItem();
+            selected_org.remove(selectedItem);
+            org_list.addItem(selectedItem);
         }
     }//GEN-LAST:event_jLabel4MouseClicked
 

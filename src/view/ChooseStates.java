@@ -11,7 +11,6 @@ import db.Dbcon;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,7 +43,7 @@ public class ChooseStates extends javax.swing.JFrame {
         
     }
     private void loadAllStates(ArrayList<String> countryIds) {
-        System.out.println(countryIds);
+        //System.out.println(countryIds);
         Dbcon dbcon=new Dbcon();
         String string="";
         for(int i=0;i<countryIds.size();i++){
@@ -55,10 +54,10 @@ public class ChooseStates extends javax.swing.JFrame {
             }else{
                 string=string+countryIds.get(i)+",";
             }
-           System.out.println(string);
+          // System.out.println(string);
       }
         String query="select state_name from tbl_state where country in ("+string+") ";
-        System.out.println(query);
+        //System.out.println(query);
         ResultSet rs=dbcon.select(query);
         try {
             while(rs.next()){
@@ -193,6 +192,29 @@ public class ChooseStates extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private ArrayList<String> generateStateIds() {
+        ArrayList<String> stateIds = new ArrayList<String>();
+        String[] items = selected_states.getItems();
+        
+        if (items.length > 0) {
+            Dbcon dbcon = new Dbcon();
+
+            for (int i = 0; i < items.length; i++) {
+               // System.out.println(items[i]);
+                ResultSet rs = dbcon.select("select state_id from tbl_state where state_name='"+items[i]+"'");
+                try {
+                    if (rs.next()) {
+                        stateIds.add(rs.getString("state_id"));
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+        }
+        System.out.println(stateIds);
+        return stateIds;
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -202,9 +224,14 @@ public class ChooseStates extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+         ArrayList<String> stateIds = generateStateIds();
+          if (stateIds.size() > 0) {
         this.dispose();
-        ChooseOrganization chooseOrganization=new ChooseOrganization();
+        ChooseOrganization chooseOrganization=new ChooseOrganization(stateIds);
         chooseOrganization.setVisible(true);
+          }else {
+            JOptionPane.showMessageDialog(rootPane, "select state");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened

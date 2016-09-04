@@ -7,12 +7,9 @@ package view;
 
 import General.Configuration;
 import db.Dbcon;
-import java.awt.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -202,7 +199,7 @@ public class ChooseCountries extends javax.swing.JFrame {
             ChooseStates chooseStates = new ChooseStates(countryIds);
             chooseStates.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(rootPane, "select state");
+            JOptionPane.showMessageDialog(rootPane, "select country");
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
