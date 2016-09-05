@@ -7,6 +7,10 @@
 package view;
 
 import db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -166,8 +170,19 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
         String subscription_name=jTextField1.getText();
         String description=jTextArea1.getText();
         Dbcon dbcon=new Dbcon();
+        
         int ins=dbcon.insert("insert into tbl_subscription(subscription_name,description,created_at)values('"+subscription_name+"','"+description+"','"+System.currentTimeMillis()+"')");
         if(ins>0){
+            ResultSet rs=dbcon.select("select max(id) from tbl_subscription ");
+            try {
+                if(rs.next()){
+                    String sub=rs.getString("max(id)");
+                    //dbcon.update("update  tbl_subscription_list set subscription_id='"+sub+"' where country_id='"++"'");
+                }
+            } catch (SQLException ex) {
+               ex.printStackTrace();
+            }
+            
             JOptionPane.showMessageDialog(rootPane, "inserted successfully");
         }
     }//GEN-LAST:event_jButton1ActionPerformed

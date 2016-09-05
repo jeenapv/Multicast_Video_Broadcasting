@@ -226,6 +226,8 @@ public class ChooseStates extends javax.swing.JFrame {
         // TODO add your handling code here:
          ArrayList<String> stateIds = generateStateIds();
           if (stateIds.size() > 0) {
+              Dbcon dbcon=new Dbcon();
+             
         this.dispose();
         ChooseOrganization chooseOrganization=new ChooseOrganization(stateIds);
         chooseOrganization.setVisible(true);
