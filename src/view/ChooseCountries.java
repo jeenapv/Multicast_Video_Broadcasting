@@ -195,6 +195,13 @@ public class ChooseCountries extends javax.swing.JFrame {
         // TODO add your handling code here:
         ArrayList<String> countryIds = generateCountryIds();
         if (countryIds.size() > 0) {
+            Dbcon dbcon=new Dbcon();
+            for(int i=0;i<countryIds.size();i++)
+            {
+                
+                 dbcon.insert("insert into tbl_subscription_list(country_id)values("+countryIds.get(i)+")");
+            }
+           
             this.dispose();
             ChooseStates chooseStates = new ChooseStates(countryIds);
             chooseStates.setVisible(true);
