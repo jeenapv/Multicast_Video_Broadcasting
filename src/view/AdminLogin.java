@@ -42,7 +42,11 @@ public class AdminLogin extends javax.swing.JFrame {
 
         jLabel1.setText("Username");
 
+        jTextField1.setText("admin");
+
         jLabel2.setText("Password");
+
+        jPasswordField1.setText("admin");
 
         jButton1.setText("LOGIN");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -87,7 +91,7 @@ public class AdminLogin extends javax.swing.JFrame {
                         .addGap(40, 40, 40))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)))
                 .addComponent(jButton1)
                 .addGap(41, 41, 41))
         );

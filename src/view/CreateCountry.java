@@ -51,8 +51,9 @@ public class CreateCountry extends javax.swing.JFrame {
 
         jLabel2.setText("Description:");
 
-        jTextArea1.setColumns(20);
+        jTextArea1.setColumns(1);
         jTextArea1.setRows(5);
+        jTextArea1.setTabSize(0);
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton1.setText("OK");
@@ -81,22 +82,20 @@ public class CreateCountry extends javax.swing.JFrame {
                         .addGap(146, 146, 146)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(64, 64, 64)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(43, 43, 43))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jButton2)
-                                .addGap(18, 18, 18)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(33, Short.MAX_VALUE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(122, 122, 122)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(33, 33, 33))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,12 +109,12 @@ public class CreateCountry extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -132,21 +131,27 @@ public class CreateCountry extends javax.swing.JFrame {
         // TODO add your handling code here:
         String country = jTextField1.getText();
         String description = jTextArea1.getText();
-        Dbcon dbcon = new Dbcon();
-        ResultSet rs = dbcon.select("select * from tbl_country where country_name='"+country+"'");
-        try {
-            if(rs.next()) {
-                JOptionPane.showMessageDialog(rootPane, "already existing country");
+        if (country.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Country name should not be blank");
+        } else {
+            Dbcon dbcon = new Dbcon();
+            ResultSet rs = dbcon.select("select * from tbl_country where country_name='" + country + "'");
+            try {
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(rootPane, "already existing country");
                 } else {
                     int ins = dbcon.insert("insert into tbl_country(country_name,description,created_at)values('" + country + "','" + description + "','" + System.currentTimeMillis() + "')");
                     if (ins > 0) {
                         JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+                        this.dispose();
+                        AdminHome adminHome = new AdminHome();
+                        adminHome.setVisible(true);
                     }
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -178,12 +183,12 @@ public class CreateCountry extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new CreateCountry().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

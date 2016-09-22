@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package multicastvideobroadcasting;
 
+import General.Configuration;
 import view.AdminLogin;
 
 /**
@@ -19,8 +19,8 @@ public class MulticastVideobroadcasting {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        AdminLogin adminLogin=new AdminLogin();
+        Configuration.initializeEnvironment();
+        AdminLogin adminLogin = new AdminLogin();
         adminLogin.setVisible(true);
     }
-    
 }

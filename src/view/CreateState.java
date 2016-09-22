@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import db.Dbcon;
@@ -24,7 +23,7 @@ public class CreateState extends javax.swing.JFrame {
      */
     public CreateState() {
         initComponents();
-         this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -40,7 +39,7 @@ public class CreateState extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        state_name = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
@@ -60,8 +59,9 @@ public class CreateState extends javax.swing.JFrame {
 
         jLabel3.setText("Description:");
 
-        jTextArea1.setColumns(20);
+        jTextArea1.setColumns(1);
         jTextArea1.setRows(5);
+        jTextArea1.setTabSize(0);
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton1.setText("BACK");
@@ -87,17 +87,6 @@ public class CreateState extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(34, 34, 34)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jTextField1)
-                            .addComponent(jComboBox1, 0, 128, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(103, 103, 103)
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
@@ -105,7 +94,19 @@ public class CreateState extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(116, 116, 116)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(state_name, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, 206, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,12 +120,12 @@ public class CreateState extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(state_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -136,47 +137,56 @@ public class CreateState extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Dbcon dbcon=new Dbcon();
-          String name=jTextField1.getText();
-        String description=jTextArea1.getText();
-        String country=jComboBox1.getSelectedItem().toString();
-        String id="";
-         ResultSet rs=dbcon.select("select * from tbl_country where country_name='"+country+"'");
-        try {
-            if(rs.next()){
-                id=rs.getString(1);
-                
+        Dbcon dbcon = new Dbcon();
+        String name = state_name.getText();
+        String description = jTextArea1.getText();
+        String country = jComboBox1.getSelectedItem().toString();
+
+        if (name.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "State name should not be blank");
+        } else {
+            String id = "";
+            ResultSet rs = dbcon.select("select * from tbl_country where country_name='" + country + "'");
+            try {
+                if (rs.next()) {
+                    id = rs.getString(1);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(rootPane, "Could not add state now, please try later");
+                return;
             }
-        } catch (SQLException ex) {
-          
+
+
+            int ins = dbcon.insert("insert into tbl_state(state_name,country,description,created_at)values('" + name + "','" + id + "','" + description + "','" + System.currentTimeMillis() + "')");
+            if (ins > 0) {
+                JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+                this.dispose();
+                AdminHome adminHome = new AdminHome();
+                adminHome.setVisible(true);
+            }
         }
-      
-        
-        int ins=dbcon.insert("insert into tbl_state(state_name,country,description,created_at)values('"+name+"','"+id+"','"+description+"','"+System.currentTimeMillis()+"')");
-        if(ins>0){
-            JOptionPane.showMessageDialog(rootPane, "inserted successfully");
-        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        this.dispose();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
 
         // TODO add your handling code here:
-         Dbcon dbcon=new Dbcon();
-        ResultSet rs=dbcon.select("select * from tbl_country");
+        Dbcon dbcon = new Dbcon();
+        ResultSet rs = dbcon.select("select * from tbl_country");
         try {
-            while(rs.next()){
+            while (rs.next()) {
                 //String country_name=rs.getString(2);
                 jComboBox1.addItem(rs.getString(2));
             }
         } catch (SQLException ex) {
-          
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -209,12 +219,12 @@ public class CreateState extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new CreateState().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -225,6 +235,6 @@ public class CreateState extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField state_name;
     // End of variables declaration//GEN-END:variables
 }

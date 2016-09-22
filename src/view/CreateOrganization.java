@@ -5,6 +5,7 @@
  */
 package view;
 
+import General.Configuration;
 import db.Dbcon;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -14,19 +15,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author Jithinpv
  */
 public class CreateOrganization extends javax.swing.JFrame {
-
+    
     public static String path = "";
+    String newFileName = null;
+    private Pattern pattern;
+    private Matcher matcher;
+    private static final String IPADDRESS_PATTERN =
+            "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
     /**
      * Creates new form CreateOrganization
@@ -34,6 +47,49 @@ public class CreateOrganization extends javax.swing.JFrame {
     public CreateOrganization() {
         initComponents();
         this.setLocationRelativeTo(null);
+        pattern = Pattern.compile(IPADDRESS_PATTERN);
+        loadCountries();
+    }
+    
+    private void loadCountries() {
+        Dbcon dbcon = new Dbcon();
+        ResultSet rs = dbcon.select("select * from tbl_country");
+        try {
+            while (rs.next()) {
+                //String country_name=rs.getString(2);
+                //id1 = rs.getString(1);
+                country_combo.addItem(rs.getString(2));
+            }
+            loadStates();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void clearAllStates() {
+        try {
+            state_combo.removeAllItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void loadStates() {
+        Dbcon dbcon = new Dbcon();
+        clearAllStates();
+        String selectedCountry = country_combo.getSelectedItem().toString().trim();
+        ResultSet select = new Dbcon().select("select country_id from tbl_country where country_name='" + selectedCountry + "'");
+        try {
+            if (select.next()) {
+                String country_id = select.getString("country_id");
+                ResultSet r = dbcon.select("select * from tbl_state where country=" + country_id);
+                while (r.next()) {
+                    state_combo.addItem(r.getString(2));
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -46,11 +102,11 @@ public class CreateOrganization extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        country_combo = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        state_combo = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        organisation_name = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -58,8 +114,8 @@ public class CreateOrganization extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        static_ipaddress_text = new javax.swing.JTextField();
+        port_text = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -73,6 +129,12 @@ public class CreateOrganization extends javax.swing.JFrame {
         });
 
         jLabel1.setText("Choose Country:");
+
+        country_combo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                country_comboItemStateChanged(evt);
+            }
+        });
 
         jLabel2.setText("Choose State:");
 
@@ -127,15 +189,15 @@ public class CreateOrganization extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(44, 44, 44)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(country_combo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(44, 44, 44)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField1)))
+                                    .addComponent(state_combo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(organisation_name)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -155,8 +217,8 @@ public class CreateOrganization extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
-                                        .addComponent(jTextField2)
-                                        .addComponent(jTextField3))))))
+                                        .addComponent(static_ipaddress_text)
+                                        .addComponent(port_text))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(113, 113, 113)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -170,15 +232,15 @@ public class CreateOrganization extends javax.swing.JFrame {
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(country_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(state_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(organisation_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -191,10 +253,10 @@ public class CreateOrganization extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(static_ipaddress_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(port_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -212,13 +274,13 @@ public class CreateOrganization extends javax.swing.JFrame {
         AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "JPG & GIF Images", "jpg", "gif");
-
+        
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -229,81 +291,100 @@ public class CreateOrganization extends javax.swing.JFrame {
                 Image scaledInstance = img.getScaledInstance(jLabel6.getWidth(), jLabel6.getHeight(), Image.SCALE_SMOOTH);
                 ImageIcon imageIcon = new ImageIcon(scaledInstance);
                 jLabel6.setIcon(imageIcon);
-
+                newFileName = System.currentTimeMillis() + "." + FilenameUtils.getExtension(path);
+                File destinationFile = new File(Configuration.organisationIconFolder + newFileName);
+                FileUtils.copyFile(chooser.getSelectedFile(), destinationFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             long size = (chooser.getSelectedFile().length()) / 1024;
         }
-
+        
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-       
-        ResultSet rs = dbcon.select("select * from tbl_country");
-        try {
-            while (rs.next()) {
-                //String country_name=rs.getString(2);
-                //id1 = rs.getString(1);
-                jComboBox1.addItem(rs.getString(2));
-            }
-        } catch (SQLException ex) {
-
-        }
-        //System.out.println(id1);
-      
-        ResultSet r = dbcon.select("select * from tbl_state");
-        try {
-            while (r.next()) {
-                //String country_name=rs.getString(2);
-                
-                jComboBox2.addItem(r.getString(2));
-            }
-        } catch (SQLException ex) {
-
-        }
-
     }//GEN-LAST:event_formWindowOpened
-
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String organization_name = jTextField1.getText();
+        String organization_name = organisation_name.getText();
         String description = jTextArea1.getText();
-        String ip=jTextField2.getText();
-        String port=jTextField3.getText();
-        String country=jComboBox1.getSelectedItem().toString();
+        String ip = static_ipaddress_text.getText();
+        String port = port_text.getText();
+        String country = country_combo.getSelectedItem().toString();
+        String state = state_combo.getSelectedItem().toString();
         
-        String state=jComboBox2.getSelectedItem().toString();
-         Dbcon dbcon = new Dbcon();
-         String id1="",id2="";
-         ResultSet rs=dbcon.select("select * from tbl_country where country_name='"+country+"'");
-          try {
+        if (organization_name.equals("")) {
+            JOptionPane.showMessageDialog(this, "Enter organisation name");
+            return;
+        }
+        
+        if (ip.equals("")) {
+            JOptionPane.showMessageDialog(this, "Enter ip address");
+            return;
+        }
+        
+        if (port.equals("")) {
+            JOptionPane.showMessageDialog(this, "Enter port");
+            return;
+        }
+        
+        matcher = pattern.matcher(ip);
+        if (!matcher.matches()) {
+            JOptionPane.showMessageDialog(rootPane, "Enter proper IP Address");
+            return;
+        }
+        
+        try {
+            int portNo = Integer.parseInt(port);
+            if (portNo < 1024 || portNo > 10000) {
+                JOptionPane.showMessageDialog(rootPane, "Port must be within range 1024 - 10000 ");
+                return;
+            }
+        } catch (NumberFormatException ne) {
+            JOptionPane.showMessageDialog(rootPane, "Enter an integer for port");
+            return;
+        }
+        
+        if (newFileName == null) {
+            JOptionPane.showMessageDialog(rootPane, "Select an image");
+            return;
+        }
+        
+        Dbcon dbcon = new Dbcon();
+        String id1 = "", id2 = "";
+        ResultSet rs = dbcon.select("select * from tbl_country where country_name='" + country + "'");
+        try {
             while (rs.next()) {
                 //String country_name=rs.getString(2);
                 id1 = rs.getString(1);
-               
             }
         } catch (SQLException ex) {
-
-           }  
-          ResultSet r = dbcon.select("select * from tbl_state where state_name='"+ state + "'");
+        }
+        ResultSet r = dbcon.select("select * from tbl_state where state_name='" + state + "'");
         try {
             while (r.next()) {
                 id2 = r.getString(1);
-               
             }
         } catch (SQLException ex) {
-
         }
-        int ins= dbcon.insert("insert into tbl_organization(organization_name,country,state,description,icon,ip_address,port,created_at)values('"+organization_name+"','"+id1+"','"+id2+"','"+description+"','"+path+"','"+ip+"','"+port+"','"+System.currentTimeMillis()+"')");
-        if(ins>0){
+        int ins = dbcon.insert("insert into tbl_organization(organization_name,country,state,description,icon,ip_address,port,created_at)values('" + organization_name + "','" + id1 + "','" + id2 + "','" + description + "','" + newFileName + "','" + ip + "','" + port + "','" + System.currentTimeMillis() + "')");
+        if (ins > 0) {
             JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+            this.dispose();
+            AdminHome adminHome = new AdminHome();
+            adminHome.setVisible(true);
         }
-      
-          
+        
+        
     }//GEN-LAST:event_jButton2ActionPerformed
+    
+private void country_comboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_country_comboItemStateChanged
+    
+    loadStates();
+    // TODO add your handling code here:
+}//GEN-LAST:event_country_comboItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -334,18 +415,17 @@ public class CreateOrganization extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            
             public void run() {
                 new CreateOrganization().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox country_combo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -357,8 +437,9 @@ public class CreateOrganization extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField organisation_name;
+    private javax.swing.JTextField port_text;
+    private javax.swing.JComboBox state_combo;
+    private javax.swing.JTextField static_ipaddress_text;
     // End of variables declaration//GEN-END:variables
 }

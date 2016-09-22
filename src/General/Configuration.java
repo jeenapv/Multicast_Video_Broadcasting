@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package General;
 
 import java.awt.Image;
@@ -19,8 +18,10 @@ import javax.swing.JLabel;
  * @author Jithinpv
  */
 public class Configuration {
-    
-     public static String iconFolder = "images/";
+
+    public static String iconFolder = "images/";
+    public static String organisationIconFolder = "organisationIconFolder/";
+
     public static void setIconOnLabel(String fileString, JLabel label) {
         // convert string file path to image icona and set on this label
         BufferedImage img = null;
@@ -32,5 +33,29 @@ public class Configuration {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void initializeEnvironment() {
+        try {
+            File f_organisationIconFolder = new File(organisationIconFolder);
+            if (!f_organisationIconFolder.exists()) {
+                f_organisationIconFolder.mkdir();
+            }
+
+//            File f_dataCloud = new File(dataCloud);
+//            if (!f_dataCloud.exists()) {
+//                f_dataCloud.mkdir();
+//            }
+//
+//            File f_organisationImages = new File(organisationImages);
+//            if (!f_organisationImages.exists()) {
+//                f_organisationImages.mkdir();
+//            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

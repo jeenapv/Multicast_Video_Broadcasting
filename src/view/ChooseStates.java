@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import General.Configuration;
@@ -18,7 +17,9 @@ import javax.swing.JOptionPane;
  * @author Jithinpv
  */
 public class ChooseStates extends javax.swing.JFrame {
-    ArrayList<String> countryIds;
+
+    public static ArrayList<String> countryIds;
+
     /**
      * Creates new form ChooseStates
      */
@@ -28,49 +29,48 @@ public class ChooseStates extends javax.swing.JFrame {
         loadIcons();
         loadAllStates(countryIds);
     }
-    
-     public ChooseStates( ArrayList<String> countryIds) {
+
+    public ChooseStates(ArrayList<String> countryIds) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.countryIds = countryIds;
         loadIcons();
         loadAllStates(countryIds);
     }
-     
+
     private void loadIcons() {
         Configuration.setIconOnLabel("leftArrow.png", jLabel4);
         Configuration.setIconOnLabel("rightArrow.png", jLabel5);
-        
+
     }
+
     private void loadAllStates(ArrayList<String> countryIds) {
         //System.out.println(countryIds);
-        Dbcon dbcon=new Dbcon();
-        String string="";
-        for(int i=0;i<countryIds.size();i++){
-         
+        Dbcon dbcon = new Dbcon();
+        String string = "";
+        for (int i = 0; i < countryIds.size(); i++) {
+
             countryIds.get(i);
-            if(i==(countryIds.size()-1)){
-                 string=string+countryIds.get(i);
-            }else{
-                string=string+countryIds.get(i)+",";
+            if (i == (countryIds.size() - 1)) {
+                string = string + countryIds.get(i);
+            } else {
+                string = string + countryIds.get(i) + ",";
             }
-          // System.out.println(string);
-      }
-        String query="select state_name from tbl_state where country in ("+string+") ";
+            // System.out.println(string);
+        }
+        String query = "select state_name from tbl_state where country in (" + string + ") ";
         //System.out.println(query);
-        ResultSet rs=dbcon.select(query);
+        ResultSet rs = dbcon.select(query);
         try {
-            while(rs.next()){
-                String stateName=rs.getString("state_name");
+            while (rs.next()) {
+                String stateName = rs.getString("state_name");
                 state_list.addItem(stateName);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
+
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -195,13 +195,12 @@ public class ChooseStates extends javax.swing.JFrame {
     private ArrayList<String> generateStateIds() {
         ArrayList<String> stateIds = new ArrayList<String>();
         String[] items = selected_states.getItems();
-        
+
         if (items.length > 0) {
             Dbcon dbcon = new Dbcon();
-
             for (int i = 0; i < items.length; i++) {
-               // System.out.println(items[i]);
-                ResultSet rs = dbcon.select("select state_id from tbl_state where state_name='"+items[i]+"'");
+                // System.out.println(items[i]);
+                ResultSet rs = dbcon.select("select state_id from tbl_state where state_name='" + items[i] + "'");
                 try {
                     if (rs.next()) {
                         stateIds.add(rs.getString("state_id"));
@@ -218,18 +217,18 @@ public class ChooseStates extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        ChooseCountries chooseCountries=new ChooseCountries();
+        ChooseCountries chooseCountries = new ChooseCountries();
         chooseCountries.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-         ArrayList<String> stateIds = generateStateIds();
-          if (stateIds.size() > 0) {
-        this.dispose();
-        ChooseOrganization chooseOrganization=new ChooseOrganization(stateIds);
-        chooseOrganization.setVisible(true);
-          }else {
+        ArrayList<String> stateIds = generateStateIds();
+        if (stateIds.size() > 0) {
+            this.dispose();
+            ChooseOrganization chooseOrganization = new ChooseOrganization(stateIds);
+            chooseOrganization.setVisible(true);
+        } else {
             JOptionPane.showMessageDialog(rootPane, "select state");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -240,23 +239,23 @@ public class ChooseStates extends javax.swing.JFrame {
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         // TODO add your handling code here:
-        if(state_list.getSelectedIndex()<0){
+        if (state_list.getSelectedIndex() < 0) {
             JOptionPane.showMessageDialog(rootPane, "select a state");
-        }else{
-           String selectedItem= state_list.getSelectedItem();
-           selected_states.addItem(selectedItem);
-           state_list.remove(selectedItem);
+        } else {
+            String selectedItem = state_list.getSelectedItem();
+            selected_states.addItem(selectedItem);
+            state_list.remove(selectedItem);
         }
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         // TODO add your handling code here:
-        if(selected_states.getSelectedIndex()<0){
+        if (selected_states.getSelectedIndex() < 0) {
             JOptionPane.showMessageDialog(rootPane, "select a state");
-        }else{
-             String selectedItem= selected_states.getSelectedItem();
-             selected_states.remove(selectedItem);
-             state_list.addItem(selectedItem);
+        } else {
+            String selectedItem = selected_states.getSelectedItem();
+            selected_states.remove(selectedItem);
+            state_list.addItem(selectedItem);
         }
     }//GEN-LAST:event_jLabel4MouseClicked
 
@@ -289,12 +288,12 @@ public class ChooseStates extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ChooseStates().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

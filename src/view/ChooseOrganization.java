@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class ChooseOrganization extends javax.swing.JFrame {
 
-    ArrayList<String> stateIds;
+    public static ArrayList<String> stateIds;
 
     /**
      * Creates new form ChooseOrganization
@@ -55,13 +55,15 @@ public class ChooseOrganization extends javax.swing.JFrame {
             } else {
                 string = string + stateIds.get(i) + ",";
             }
-          //  System.out.println(string);
+            //  System.out.println(string);
         }
-        ResultSet rs = dbcon.select("select organization_name from tbl_organization where state in (" + string + ")");
+        String query = "SELECT *, state.state_name,country.country_name FROM tbl_organization AS org ,tbl_state AS state , tbl_country AS country WHERE org.state IN (" + string + ") AND state.state_id = org.state AND country.country_id = org.country;";
+        System.out.println(query);
+        ResultSet rs = dbcon.select(query);
         try {
             while (rs.next()) {
                 String orgName = rs.getString("organization_name");
-                org_list.addItem(orgName);
+                org_list.addItem(orgName + "-" + rs.getString("state_name") + "-" + rs.getString("country_name"));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -195,11 +197,30 @@ public class ChooseOrganization extends javax.swing.JFrame {
         chooseStates.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private ArrayList<String> generateBuffer() {
+        ArrayList<String> organisations = new ArrayList<String>();
+        String[] items = selected_org.getItems();
+        if (items.length > 0) {
+            for (int i = 0; i < items.length; i++) {
+                organisations.add(items[i]);
+            }
+        } else {
+        }
+
+        return organisations;
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        CreateMulticastSubscription createMulticastSubscription = new CreateMulticastSubscription();
-        createMulticastSubscription.setVisible(true);
+        ArrayList<String> buffer = generateBuffer();
+        if (buffer.size() != 0) {
+            this.dispose();
+            CreateMulticastSubscription createMulticastSubscription = new CreateMulticastSubscription(buffer);
+            createMulticastSubscription.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Please select atleast one organisation");
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
@@ -253,12 +274,12 @@ public class ChooseOrganization extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ChooseOrganization().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

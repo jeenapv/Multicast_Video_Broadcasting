@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import db.Dbcon;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,12 +17,32 @@ import javax.swing.JOptionPane;
  */
 public class CreateMulticastSubscription extends javax.swing.JFrame {
 
+    ArrayList<String> buffer;
+
     /**
      * Creates new form CreateMulticastSubscription
      */
     public CreateMulticastSubscription() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    public CreateMulticastSubscription(ArrayList<String> buffer) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.buffer = buffer;
+        DefaultTableModel model = (DefaultTableModel) oraganisation_table.getModel();
+        String arr[] = new String[10];
+        int index = 1;
+        for (String buff : buffer) {
+            String[] split = buff.split("-");
+            arr[0] = (index++) + "";
+            arr[1] = split[0];
+            arr[2] = split[2];
+            arr[3] = split[1];
+            model.addRow(arr);
+        }
+
     }
 
     /**
@@ -33,7 +55,7 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        oraganisation_table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -45,7 +67,7 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        oraganisation_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -68,13 +90,13 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-        }
+        jScrollPane1.setViewportView(oraganisation_table);
+        oraganisation_table.getColumnModel().getColumn(0).setMinWidth(50);
+        oraganisation_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        oraganisation_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        oraganisation_table.getColumnModel().getColumn(1).setResizable(false);
+        oraganisation_table.getColumnModel().getColumn(2).setResizable(false);
+        oraganisation_table.getColumnModel().getColumn(3).setResizable(false);
 
         jLabel1.setText("CREATE MULTICAST SUBSCRIPTION");
 
@@ -82,8 +104,9 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
 
         jLabel3.setText("Description:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
+        jTextArea1.setColumns(1);
+        jTextArea1.setRows(3);
+        jTextArea1.setTabSize(0);
         jScrollPane2.setViewportView(jTextArea1);
 
         jButton1.setText("OK");
@@ -119,15 +142,14 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(180, 180, 180)
-                        .addComponent(jButton2)
-                        .addGap(60, 60, 60)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))))
+                .addGap(105, 105, 105))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,15 +161,15 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
                 .addGap(31, 31, 31))
         );
 
@@ -157,20 +179,51 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        ChooseOrganization chooseOrganization=new ChooseOrganization();
+        ChooseOrganization chooseOrganization = new ChooseOrganization();
         chooseOrganization.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String subscription_name=jTextField1.getText();
-        String description=jTextArea1.getText();
-        Dbcon dbcon=new Dbcon();
-        int ins=dbcon.insert("insert into tbl_subscription(subscription_name,description,created_at)values('"+subscription_name+"','"+description+"','"+System.currentTimeMillis()+"')");
-        if(ins>0){
-            JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+        String subscription_name = jTextField1.getText();
+        String description = jTextArea1.getText();
+        if (!subscription_name.trim().equals("")) {
+            Dbcon dbcon = new Dbcon();
+            int ins = dbcon.insert("insert into tbl_subscription(subscription_name,description,created_at)values('" + subscription_name + "','" + description + "','" + System.currentTimeMillis() + "')");
+            if (ins > 0) {
+                ResultSet select = dbcon.select("select max(id) from tbl_subscription");
+                try {
+                    if (select.next()) {
+                        String id = select.getString(1);
+                        System.out.println("New id " + id);
+                        JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Enter subscription name");
         }
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void updatesubscriptionList() {
+        try {
+            Dbcon dbcon = new Dbcon();
+            for (String buff : buffer) {
+                String[] split = buff.split("-");
+                String organisationName = split[0];
+                String countyName = split[2];
+                String stateName = split[1];
+
+                String query = "select organization_id from tbl_organization where ";
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -201,12 +254,12 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new CreateMulticastSubscription().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -215,8 +268,8 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable oraganisation_table;
     // End of variables declaration//GEN-END:variables
 }
