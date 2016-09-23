@@ -223,12 +223,13 @@ public class ChooseStates extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        ArrayList<String> stateIds = generateStateIds();
-        if (stateIds.size() > 0) {
+          if (stateIds.size() > 0) {
             this.dispose();
             ChooseOrganization chooseOrganization = new ChooseOrganization(stateIds);
             chooseOrganization.setVisible(true);
         } else {
+
+
             JOptionPane.showMessageDialog(rootPane, "select state");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
