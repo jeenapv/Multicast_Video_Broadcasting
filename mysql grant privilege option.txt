@@ -1,0 +1,2 @@
+grant all privileges on multicast_video_broadcasting.* to root@'%' identified by 'root';
+FLUSH PRIVILEGES;

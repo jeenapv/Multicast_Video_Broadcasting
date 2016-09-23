@@ -209,7 +209,6 @@ public class ChooseStates3 extends javax.swing.JFrame {
                     ex.printStackTrace();
                 }
             }
-
         }
         System.out.println(stateIds);
         return stateIds;
