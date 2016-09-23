@@ -204,7 +204,7 @@ public class ChooseCountries extends javax.swing.JFrame {
            
             this.dispose();
             ChooseStates chooseStates = new ChooseStates(countryIds);
-            chooseStates.setVisible(true);
+            
         } else {
             JOptionPane.showMessageDialog(rootPane, "select country");
         }
