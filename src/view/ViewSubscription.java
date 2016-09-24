@@ -6,6 +6,13 @@
 
 package view;
 
+import db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Jithinpv
@@ -18,6 +25,7 @@ public class ViewSubscription extends javax.swing.JFrame {
     public ViewSubscription() {
         initComponents();
         this.setLocationRelativeTo(null);
+        loadAllSubscription();
     }
 
     /**
@@ -31,8 +39,8 @@ public class ViewSubscription extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        list1 = new java.awt.List();
+        subscription_table = new javax.swing.JTable();
+        companids_list = new java.awt.List();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
@@ -40,7 +48,7 @@ public class ViewSubscription extends javax.swing.JFrame {
 
         jLabel1.setText("ALL SUBSCRIPTIONS");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        subscription_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -63,7 +71,17 @@ public class ViewSubscription extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        subscription_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                subscription_tableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(subscription_table);
+        if (subscription_table.getColumnModel().getColumnCount() > 0) {
+            subscription_table.getColumnModel().getColumn(0).setMinWidth(50);
+            subscription_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+            subscription_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        }
 
         jLabel2.setText("Companies:");
 
@@ -82,7 +100,7 @@ public class ViewSubscription extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
-                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(companids_list, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(157, 157, 157)
@@ -107,7 +125,7 @@ public class ViewSubscription extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(list1, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                    .addComponent(companids_list, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(33, 33, 33)
                 .addComponent(jButton1)
@@ -124,6 +142,48 @@ public class ViewSubscription extends javax.swing.JFrame {
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void subscription_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_subscription_tableMouseClicked
+        // TODO add your handling code here:
+        
+        if(subscription_table.getSelectedRow()>=0) {
+            String id = subscription_table.getValueAt(subscription_table.getSelectedRow(), 0).toString();
+            Dbcon dbcon = new Dbcon();
+            String sql = "select org.organization_name,sub_list.* from tbl_organization as org ,tbl_subscription_list as sub_list,tbl_subscription as tbl_sub where tbl_sub.id=sub_list.subscription_id and org.organization_id=sub_list.organization_id and tbl_sub.id='"+id+"' ";
+            ResultSet rs=dbcon.select(sql);
+            try {
+                companids_list.clear();
+                while(rs.next()){
+                    companids_list.addItem(rs.getString("organization_name"));
+                
+            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+        }
+        
+        
+    }//GEN-LAST:event_subscription_tableMouseClicked
+
+    private void loadAllSubscription(){
+        Dbcon dbcon=new Dbcon();
+        DefaultTableModel model = (DefaultTableModel) subscription_table.getModel();
+         String arr[] = new String[3];
+        ResultSet rs=dbcon.select("select * from tbl_subscription");
+        try {
+            while(rs.next()){
+                String sub_id=rs.getString("id");
+                String sub_name=rs.getString("subscription_name");
+                String sub_description=rs.getString("description");
+                arr[0]=sub_id;
+                arr[1]=sub_name;
+                arr[2]=sub_description;
+                model.addRow(arr);
+            }
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -160,11 +220,11 @@ public class ViewSubscription extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.List companids_list;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private java.awt.List list1;
+    private javax.swing.JTable subscription_table;
     // End of variables declaration//GEN-END:variables
 }

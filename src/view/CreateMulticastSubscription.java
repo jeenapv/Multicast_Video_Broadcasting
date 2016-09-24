@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Jithinpv
  */
 public class CreateMulticastSubscription extends javax.swing.JFrame {
-
+    
     ArrayList<String> buffer;
 
     /**
@@ -29,7 +29,7 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-
+    
     public CreateMulticastSubscription(ArrayList<String> buffer) {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -45,7 +45,7 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
             arr[3] = split[1];
             model.addRow(arr);
         }
-
+        
     }
 
     /**
@@ -188,26 +188,48 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String subscription_name=jTextField1.getText();
-        String description=jTextArea1.getText();
-        Dbcon dbcon=new Dbcon();
+        String sub = "";
+        String subscription_name = jTextField1.getText();
+        String description = jTextArea1.getText();
+        Dbcon dbcon = new Dbcon();
         
-        int ins=dbcon.insert("insert into tbl_subscription(subscription_name,description,created_at)values('"+subscription_name+"','"+description+"','"+System.currentTimeMillis()+"')");
-        if(ins>0){
-            ResultSet rs=dbcon.select("select max(id) from tbl_subscription ");
+        int ins = dbcon.insert("insert into tbl_subscription(subscription_name,description,created_at)values('" + subscription_name + "','" + description + "','" + System.currentTimeMillis() + "')");
+        if (ins > 0) {
+            ResultSet rs = dbcon.select("select max(id) from tbl_subscription ");
             try {
-                if(rs.next()){
-                    String sub=rs.getString("max(id)");
+                if (rs.next()) {
+                    sub = rs.getString("max(id)");
                     //dbcon.update("update  tbl_subscription_list set subscription_id='"+sub+"' where country_id='"++"'");
                 }
             } catch (SQLException ex) {
-               ex.printStackTrace();
+                ex.printStackTrace();
+            }
+            
+            for (int i = 0; i < oraganisation_table.getRowCount(); i++) {
+                
+                String org_name = oraganisation_table.getValueAt(i, 1).toString();
+                String country_name = oraganisation_table.getValueAt(i, 2).toString();
+                String state_name = oraganisation_table.getValueAt(i, 3).toString();
+                String query = "select state.state_name,country.country_name,org.* from tbl_organization as org,tbl_state as state,tbl_country as country where country.country_id=org.country and state.state_id=org.state and  org.organization_name='" + org_name + "' and  country.country_name='" + country_name + "' and state.state_name='" + state_name + "'";
+                System.out.println(query);
+                ResultSet r = dbcon.select(query);
+                try {
+                    if (r.next()) {
+                        String org_id = r.getString("organization_id");
+                        dbcon.insert("insert into tbl_subscription_list(organization_id,subscription_id)values('" + org_id + "','" + sub + "')");
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
             JOptionPane.showMessageDialog(rootPane, "inserted successfully");
+            this.dispose();
+            AdminHome adminHome = new AdminHome();
+            adminHome.setVisible(true);
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     private void updatesubscriptionList() {
         try {
             Dbcon dbcon = new Dbcon();
@@ -216,9 +238,9 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
                 String organisationName = split[0];
                 String countyName = split[2];
                 String stateName = split[1];
-
+                
                 String query = "select organization_id from tbl_organization where ";
-
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -254,7 +276,7 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
+            
             public void run() {
                 new CreateMulticastSubscription().setVisible(true);
             }

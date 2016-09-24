@@ -196,14 +196,11 @@ public class ChooseCountries extends javax.swing.JFrame {
         ArrayList<String> countryIds = generateCountryIds();
         if (countryIds.size() > 0) {
             Dbcon dbcon=new Dbcon();
-            for(int i=0;i<countryIds.size();i++)
-            {
-                
-                 dbcon.insert("insert into tbl_subscription_list(country_id)values("+countryIds.get(i)+")");
-            }
+           
            
             this.dispose();
-            ChooseStates chooseStates = new ChooseStates(countryIds);
+            ChooseStates3 chooseStates = new ChooseStates3(countryIds);
+            chooseStates.setVisible(true);
             
         } else {
             JOptionPane.showMessageDialog(rootPane, "select country");
