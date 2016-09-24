@@ -14,6 +14,9 @@ import db.Dbcon;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import javax.imageio.ImageIO;
@@ -49,25 +52,17 @@ public class OrganisationClient extends javax.swing.JFrame {
                 String description = rs.getString("description");
                 String ip_address = rs.getString("ip_address");
                 String port = rs.getString("port");
+                startAgent(port);
 
                 Blob blob = rs.getBlob("photo");
                 if (blob != null) {
                     try {
-//                        InputStream binaryStream = blob.getBinaryStream(0, blob.length());
-//                        Image img = ImageIO.read(binaryStream);
-//                        Image scaledInstance = img.getScaledInstance(org_image_label.getWidth(), org_image_label.getHeight(), Image.SCALE_SMOOTH);
-//                        ImageIcon imageIcon = new ImageIcon(scaledInstance);
-//                        org_image_label.setIcon(imageIcon);
-
                         InputStream binaryStream = blob.getBinaryStream();
                         BufferedImage image = ImageIO.read(binaryStream);
                         Image img = image;
                         Image scaledInstance = img.getScaledInstance(org_image_label.getWidth(), org_image_label.getHeight(), Image.SCALE_SMOOTH);
                         ImageIcon imageIcon = new ImageIcon(scaledInstance);
                         org_image_label.setIcon(imageIcon);
-
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.out.println("Error in loading image icon ");
@@ -84,6 +79,46 @@ public class OrganisationClient extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    DatagramSocket serverSocket;
+
+    private void closeSocket() {
+        try {
+            serverSocket.close();
+        } catch (Exception e) {
+        }
+    }
+
+    class ServerThread extends Thread {
+
+        String portString;
+
+        private ServerThread(String portString) {
+            this.portString = portString;
+        }
+
+        public void run() {
+            try {
+                int port = Integer.parseInt(portString);
+                serverSocket = new DatagramSocket(port);
+                byte[] receiveData = new byte[1024];
+                byte[] sendData = new byte[1024];
+                System.out.println("Server listening on " + port);
+                while (true) {
+                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                    serverSocket.receive(receivePacket);
+                    String sentence = new String(receivePacket.getData());
+                    System.out.println("RECEIVED: " + sentence);
+
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    private void startAgent(String portString) {
+        new ServerThread(portString).start();
     }
 
     /** This method is called from within the constructor to
@@ -190,6 +225,7 @@ public class OrganisationClient extends javax.swing.JFrame {
     private void logout() {
         try {
             int updated = new Dbcon().update("update organisation_hotline set status_code=2 where organisation_id=" + organisationId);
+            closeSocket();
             if (updated > 0) {
                 this.dispose();
             } else {
