@@ -5,16 +5,15 @@
  */
 package view;
 
+import General.Configuration;
 import db.Dbcon;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import static view.CreateOrganization.path;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -22,8 +21,9 @@ import static view.CreateOrganization.path;
  */
 public class CreateNewPresentation extends javax.swing.JFrame {
 
-    public static String filePath = "";
-    public static String fileName = "";
+    public String filePath = "";
+    public String fileName = "";
+    String newFileName = null;
     public static long size;
 
     /**
@@ -32,6 +32,7 @@ public class CreateNewPresentation extends javax.swing.JFrame {
     public CreateNewPresentation() {
         initComponents();
         this.setLocationRelativeTo(null);
+        ok_button.setEnabled(false);
     }
 
     /**
@@ -46,10 +47,10 @@ public class CreateNewPresentation extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        ok_button = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        presenetation_name_text = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,16 +65,10 @@ public class CreateNewPresentation extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("OR");
-
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Drag Files Here");
-        jLabel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        jButton2.setText("OK");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        ok_button.setText("OK");
+        ok_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                ok_buttonActionPerformed(evt);
             }
         });
 
@@ -84,52 +79,52 @@ public class CreateNewPresentation extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Presentation Name");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(133, 133, 133))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(79, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap(43, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(136, 136, 136))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(63, 63, 63))))
+                        .addGap(23, 23, 23))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(presenetation_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ok_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(41, 41, 41))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(22, 22, 22)
                 .addComponent(jLabel1)
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addGap(10, 10, 10)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addGap(44, 44, 44))
+                    .addComponent(presenetation_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ok_button, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35))
         );
 
         pack();
@@ -142,42 +137,66 @@ public class CreateNewPresentation extends javax.swing.JFrame {
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void ok_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ok_buttonActionPerformed
         // TODO add your handling code here:
         Dbcon dbcon = new Dbcon();
-        int ins=dbcon.insert("insert into tbl_create_presentation(file_path,file_name,file_size,created_at)values('"+filePath+"','"+fileName+"','"+size+"','"+System.currentTimeMillis()+"')");
-        if(ins>0){
-            
-             this.dispose();
-        AnalyzeFile analyzeFile = new AnalyzeFile();
-        analyzeFile.setVisible(true);
+        String presentationName = presenetation_name_text.getText().trim();
+        if (presentationName.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Please enter presentation name");
+            return;
         }
-        
-       
-    }//GEN-LAST:event_jButton2ActionPerformed
+
+        if (newFileName == null) {
+            JOptionPane.showMessageDialog(rootPane, "Please choose a video presentation");
+            return;
+        }
+
+        int ins = dbcon.insert("insert into tbl_create_presentation("
+                + " name,"
+                + " file_name,"
+                + " file_size,"
+                + " created_at)values('" + presentationName + "', '" + newFileName + "','" + size + "','" + System.currentTimeMillis() + "')");
+        if (ins > 0) {
+            this.dispose();
+            AnalyzeFile analyzeFile = new AnalyzeFile(newFileName, size + "");
+            analyzeFile.setVisible(true);
+        }
+
+
+    }//GEN-LAST:event_ok_buttonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "JPG & GIF Images", "jpg", "gif");
+                "Vedio files", "avi", "mov", "3gp", "mp4", "mpg");
 
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             filePath = chooser.getSelectedFile().getPath();
-            fileName = chooser.getSelectedFile().getName();
-            BufferedImage img = null;
-            try {
-                img = ImageIO.read(new File(filePath));
-                Image scaledInstance = img.getScaledInstance(jLabel4.getWidth(), jLabel4.getHeight(), Image.SCALE_SMOOTH);
-                ImageIcon imageIcon = new ImageIcon(scaledInstance);
-                jLabel4.setIcon(imageIcon);
+            if (FilenameUtils.getExtension(filePath).equals("avi")
+                    || FilenameUtils.getExtension(filePath).equals("mov")
+                    || FilenameUtils.getExtension(filePath).equals("3gp")
+                    || FilenameUtils.getExtension(filePath).equals("mp4")
+                    || FilenameUtils.getExtension(filePath).equals("mpg")) {
+                fileName = chooser.getSelectedFile().getName();
+                BufferedImage img = null;
+                size = (chooser.getSelectedFile().length()) / 1024;
+                ok_button.setEnabled(true);
+                newFileName = System.currentTimeMillis() + "." + FilenameUtils.getExtension(fileName);
+                File newFile = new File(Configuration.presentationFolder + newFileName);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    FileUtils.copyFile(chooser.getSelectedFile(), newFile);
+
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Please choose a vedio presentation");
+                return;
             }
-             size = (chooser.getSelectedFile().length()) / 1024;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -210,19 +229,19 @@ public class CreateNewPresentation extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new CreateNewPresentation().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton ok_button;
+    private javax.swing.JTextField presenetation_name_text;
     // End of variables declaration//GEN-END:variables
 }

@@ -21,6 +21,7 @@ public class Configuration {
 
     public static String iconFolder = "images/";
     public static String organisationIconFolder = "organisationIconFolder/";
+    public static String presentationFolder = "presentationFolder/";
 
     public static void setIconOnLabel(String fileString, JLabel label) {
         // convert string file path to image icona and set on this label
@@ -42,10 +43,10 @@ public class Configuration {
                 f_organisationIconFolder.mkdir();
             }
 
-//            File f_dataCloud = new File(dataCloud);
-//            if (!f_dataCloud.exists()) {
-//                f_dataCloud.mkdir();
-//            }
+            File f_presentationFolder = new File(presentationFolder);
+            if (!f_presentationFolder.exists()) {
+                f_presentationFolder.mkdir();
+            }
 //
 //            File f_organisationImages = new File(organisationImages);
 //            if (!f_organisationImages.exists()) {
