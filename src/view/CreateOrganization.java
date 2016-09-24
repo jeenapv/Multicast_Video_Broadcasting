@@ -369,12 +369,14 @@ public class CreateOrganization extends javax.swing.JFrame {
             }
         } catch (SQLException ex) {
         }
-        int ins = dbcon.insert("insert into tbl_organization(organization_name,country,state,description,icon,ip_address,port,created_at)values('" + organization_name + "','" + id1 + "','" + id2 + "','" + description + "','" + newFileName + "','" + ip + "','" + port + "','" + System.currentTimeMillis() + "')");
-        if (ins > 0) {
+        //int ins = dbcon.insert("insert into tbl_organization(organization_name,country,state,description,icon,ip_address,port,created_at)values('" + organization_name + "','" + id1 + "','" + id2 + "','" + description + "','" + newFileName + "','" + ip + "','" + port + "','" + System.currentTimeMillis() + "')");
+        if (dbcon.registerOrganisation(organization_name, id1, id2, description, ip, port, path)) {
             JOptionPane.showMessageDialog(rootPane, "inserted successfully");
             this.dispose();
             AdminHome adminHome = new AdminHome();
             adminHome.setVisible(true);
+        } else{
+            JOptionPane.showMessageDialog(rootPane, "Connection failed, Please try after some time");
         }
         
         

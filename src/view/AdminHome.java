@@ -433,6 +433,9 @@ public class AdminHome extends javax.swing.JFrame {
 
 private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
 
+    ViewAllOrganisations viewAllOrganisations = new ViewAllOrganisations();
+    viewAllOrganisations.setVisible(true);
+    this.dispose();
     
     // TODO add your handling code here:
 }//GEN-LAST:event_jButton8ActionPerformed

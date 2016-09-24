@@ -1,2 +1,13 @@
 grant all privileges on multicast_video_broadcasting.* to root@'%' identified by 'root';
 FLUSH PRIVILEGES;
+GRANT SUPER ON multicast_video_broadcasting.* TO root@'%' IDENTIFIED BY 'password';
+grant SUPER on multicast_video_broadcasting.* to root@'%' identified by 'root';
+grant all on multicast_video_broadcasting.* to root@'%' identified by 'root';
+
+
+Use the below code only!
+
+GRANT SUPER ON *.* TO root@'%' IDENTIFIED BY 'root';
+FLUSH PRIVILEGES;
+
+GRANT SUPER ON *.* TO root@'192.168.1.7' IDENTIFIED BY 'root';

@@ -11,7 +11,13 @@
 package view;
 
 import db.Dbcon;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.ResultSet;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,6 +50,32 @@ public class OrganisationClient extends javax.swing.JFrame {
                 String ip_address = rs.getString("ip_address");
                 String port = rs.getString("port");
 
+                Blob blob = rs.getBlob("photo");
+                if (blob != null) {
+                    try {
+//                        InputStream binaryStream = blob.getBinaryStream(0, blob.length());
+//                        Image img = ImageIO.read(binaryStream);
+//                        Image scaledInstance = img.getScaledInstance(org_image_label.getWidth(), org_image_label.getHeight(), Image.SCALE_SMOOTH);
+//                        ImageIcon imageIcon = new ImageIcon(scaledInstance);
+//                        org_image_label.setIcon(imageIcon);
+
+                        InputStream binaryStream = blob.getBinaryStream();
+                        BufferedImage image = ImageIO.read(binaryStream);
+                        Image img = image;
+                        Image scaledInstance = img.getScaledInstance(org_image_label.getWidth(), org_image_label.getHeight(), Image.SCALE_SMOOTH);
+                        ImageIcon imageIcon = new ImageIcon(scaledInstance);
+                        org_image_label.setIcon(imageIcon);
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error in loading image icon ");
+                    }
+                } else {
+                    System.out.println("Blob is null");
+                }
+
                 organisation_name_label.setText(organization_name);
                 ipaddress_label.setText(ip_address);
                 port_label.setText(port);
@@ -64,7 +96,7 @@ public class OrganisationClient extends javax.swing.JFrame {
     private void initComponents() {
 
         organisation_name_label = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        org_image_label = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         ipaddress_label = new javax.swing.JLabel();
@@ -82,7 +114,7 @@ public class OrganisationClient extends javax.swing.JFrame {
         organisation_name_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         organisation_name_label.setText("Organisation name");
 
-        jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        org_image_label.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel3.setText("Ip address");
 
@@ -108,7 +140,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(115, 115, 115)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(org_image_label, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addComponent(organisation_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -138,7 +170,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                         .addComponent(organisation_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(org_image_label, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -158,7 +190,7 @@ public class OrganisationClient extends javax.swing.JFrame {
     private void logout() {
         try {
             int updated = new Dbcon().update("update organisation_hotline set status_code=2 where organisation_id=" + organisationId);
-            if(updated>0) {
+            if (updated > 0) {
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Some issue in database connection, couldn't logout succesfully, Please check database");
@@ -219,10 +251,10 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ipaddress_label;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel org_image_label;
     private javax.swing.JLabel organisation_name_label;
     private javax.swing.JLabel port_label;
     // End of variables declaration//GEN-END:variables

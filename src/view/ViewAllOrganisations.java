@@ -12,6 +12,8 @@ package view;
 
 import db.Dbcon;
 import java.sql.ResultSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,15 +23,26 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ViewAllOrganisations extends javax.swing.JFrame {
 
+    private Pattern pattern;
+    private Matcher matcher;
+    private static final String IPADDRESS_PATTERN =
+            "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+    
     /** Creates new form ViewAllOrganisations */
     public ViewAllOrganisations() {
         initComponents();
         this.setLocationRelativeTo(null);
         loadAllOrganisation();
+        save_button.setEnabled(false);
+        pattern = Pattern.compile(IPADDRESS_PATTERN);
     }
 
     private void loadAllOrganisation() {
         try {
+            clearTable();
             String str = "select * from tbl_organization order by organization_id desc";
             ResultSet rs = new Dbcon().select(str);
             String arr[] = new String[10];
@@ -71,6 +84,12 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         all_organisation = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        ip_address_text = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        port_text = new javax.swing.JTextField();
+        save_button = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,6 +109,14 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        all_organisation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                all_organisationMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                all_organisationMousePressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(all_organisation);
         all_organisation.getColumnModel().getColumn(0).setMinWidth(50);
         all_organisation.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -105,6 +132,24 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Ip Address");
+
+        jLabel2.setText("Port");
+
+        save_button.setText("Save");
+        save_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                save_buttonActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Home");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -112,16 +157,36 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ip_address_text, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(port_text, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(save_button)
+                .addGap(5, 5, 5))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel1)
+                    .addComponent(ip_address_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(port_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(save_button))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();
@@ -141,8 +206,8 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     // user is offline
                     int updated = new Dbcon().update("update organisation_hotline set status_code=1 where organisation_id=" + organisation_id);
                     if (updated > 0) {
-                         // launch organisation listner
-                        OrganisationClient organisationClient =  new OrganisationClient(organisation_id);
+                        // launch organisation listner
+                        OrganisationClient organisationClient = new OrganisationClient(organisation_id);
                         organisationClient.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Could not launch, please try again later");
@@ -151,15 +216,15 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     JOptionPane.showMessageDialog(rootPane, "Organisation in already active");
                 }
             } else {
-                    // not there yet, add it
-                    int insert = new Dbcon().insert("insert into organisation_hotline (organisation_id,status_code) values ("+organisation_id+" ,1)");
-                    if(insert> 0) {
-                        // launch organisation listner
-                        OrganisationClient organisationClient = new OrganisationClient(organisation_id);
-                        organisationClient.setVisible(true);
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane, "Could not launch, please try again later");
-                    }
+                // not there yet, add it
+                int insert = new Dbcon().insert("insert into organisation_hotline (organisation_id,status_code) values (" + organisation_id + " ,1)");
+                if (insert > 0) {
+                    // launch organisation listner
+                    OrganisationClient organisationClient = new OrganisationClient(organisation_id);
+                    organisationClient.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Could not launch, please try again later");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,6 +239,91 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     // TODO add your handling code here:
 }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void clearTable() throws Exception {
+        DefaultTableModel dm = (DefaultTableModel) all_organisation.getModel();
+        int rowCount = dm.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            dm.removeRow(i);
+        }
+    }
+
+private void all_organisationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_all_organisationMouseClicked
+
+    try {
+        if (all_organisation.getSelectedRow() >= 0) {
+            String ipAddress = all_organisation.getValueAt(all_organisation.getSelectedRow(), 4).toString();
+            String port = all_organisation.getValueAt(all_organisation.getSelectedRow(), 5).toString();
+            ip_address_text.setText(ipAddress);
+            port_text.setText(port);
+            save_button.setEnabled(true);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    // TODO add your handling code here:
+}//GEN-LAST:event_all_organisationMouseClicked
+
+private void all_organisationMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_all_organisationMousePressed
+// TODO add your handling code here:
+}//GEN-LAST:event_all_organisationMousePressed
+
+private void save_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_buttonActionPerformed
+
+    if (all_organisation.getSelectedRow() >= 0) {
+        String organisation_id = all_organisation.getValueAt(all_organisation.getSelectedRow(), 6).toString();
+        System.out.println("organisation_id " + organisation_id);
+        String ipAddress = ip_address_text.getText().trim();
+        String port = port_text.getText().trim();
+
+        if(ipAddress.trim().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter Ip address");
+            return;
+        }
+        
+        if (port.equals("")) {
+            JOptionPane.showMessageDialog(this, "Enter port");
+            return;
+        }
+        
+        try {
+            int portNo = Integer.parseInt(port);
+            if (portNo < 1024 || portNo > 10000) {
+                JOptionPane.showMessageDialog(rootPane, "Port must be within range 1024 - 10000 ");
+                return;
+            }
+        } catch (NumberFormatException ne) {
+            JOptionPane.showMessageDialog(rootPane, "Enter an integer for port");
+            return;
+        }
+        
+        matcher = pattern.matcher(ipAddress);
+        if (!matcher.matches()) {
+            JOptionPane.showMessageDialog(rootPane, "Enter proper IP Address");
+            return;
+        }
+        
+        String sql = "update tbl_organization set ip_address='" + ipAddress + "' , port='" + port + "' where organization_id=" + organisation_id;
+        int update = new Dbcon().update(sql);
+        if (update > 0) {
+            JOptionPane.showMessageDialog(rootPane, "Sucessfully updated");
+            loadAllOrganisation();
+            save_button.setEnabled(false);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Could not update now, please try again after some time");
+        }
+    }
+    // TODO add your handling code here:
+}//GEN-LAST:event_save_buttonActionPerformed
+
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+    new AdminHome().setVisible(true);
+    dispose();
+    // TODO add your handling code here:
+}//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -212,7 +362,13 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable all_organisation;
+    private javax.swing.JTextField ip_address_text;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField port_text;
+    private javax.swing.JButton save_button;
     // End of variables declaration//GEN-END:variables
 }
