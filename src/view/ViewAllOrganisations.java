@@ -24,6 +24,7 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
     /** Creates new form ViewAllOrganisations */
     public ViewAllOrganisations() {
         initComponents();
+        this.setLocationRelativeTo(null);
         loadAllOrganisation();
     }
 
@@ -128,7 +129,7 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-    if (all_organisation.getSelectedRow() > 0) {
+    if (all_organisation.getSelectedRow() >= 0) {
         String organisation_id = all_organisation.getValueAt(all_organisation.getSelectedRow(), 6).toString();
         System.out.println("organisation_id " + organisation_id);
         ResultSet rs = new Dbcon().select("select * from organisation_hotline where organisation_id=" + organisation_id.trim());
@@ -141,7 +142,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     int updated = new Dbcon().update("update organisation_hotline set status_code=1 where organisation_id=" + organisation_id);
                     if (updated > 0) {
                          // launch organisation listner
-                        OrganisationClient organisationClient =  new OrganisationClient();
+                        OrganisationClient organisationClient =  new OrganisationClient(organisation_id);
                         organisationClient.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Could not launch, please try again later");
@@ -154,7 +155,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     int insert = new Dbcon().insert("insert into organisation_hotline (organisation_id,status_code) values ("+organisation_id+" ,1)");
                     if(insert> 0) {
                         // launch organisation listner
-                        OrganisationClient organisationClient = new OrganisationClient();
+                        OrganisationClient organisationClient = new OrganisationClient(organisation_id);
                         organisationClient.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Could not launch, please try again later");
