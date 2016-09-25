@@ -56,7 +56,7 @@ public class AdminLogin extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("LAUNCH ORGANISATION");
+        jButton2.setText("SELF LAUNCH");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -83,7 +83,7 @@ public class AdminLogin extends javax.swing.JFrame {
                             .addComponent(jPasswordField1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton2)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 78, Short.MAX_VALUE)))))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -135,9 +135,9 @@ public class AdminLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-         ViewAllOrganisations viewAllOrganisations = new ViewAllOrganisations();
-        viewAllOrganisations.setVisible(true);
+
+        SelfLaunch selfLaunch = new SelfLaunch();
+        selfLaunch.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
