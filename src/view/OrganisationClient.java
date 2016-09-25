@@ -14,6 +14,7 @@ import db.Dbcon;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -31,41 +32,43 @@ import javax.swing.JOptionPane;
  * @author kakes
  */
 public class OrganisationClient extends javax.swing.JFrame {
-
+    
     String organisationId;
 
     /** Creates new form OrganisationClient */
     public OrganisationClient() {
         initComponents();
     }
-
+    
     public OrganisationClient(String organisationId) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.organisationId = organisationId;
         loadOrganisationDetails();
     }
-
+    
     class FileReceiverThread extends Thread {
-
+        
         String adminIp;
         int ftpPort;
         String fileName;
-
+        
         private FileReceiverThread(String adminIp, int ftpPort, String fileName) {
             this.adminIp = adminIp;
             this.ftpPort = ftpPort;
             this.fileName = fileName;
         }
-
+        
         public void run() {
             System.out.println("File receiver thread started ");
             try {
                 System.out.println("Client started");
                 Socket socket = new Socket(InetAddress.getByName(adminIp), ftpPort);
                 byte[] contents = new byte[10000];
-
-                FileOutputStream fos = new FileOutputStream(fileName);
+                
+                File fileToBeCreated = new File(fileName);
+                System.out.println("Creating file " + fileToBeCreated.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(fileToBeCreated);
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
                 InputStream is = socket.getInputStream();
 
@@ -82,7 +85,7 @@ public class OrganisationClient extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void loadOrganisationDetails() {
         try {
             ResultSet rs = new Dbcon().select("select * from tbl_organization where organization_id=" + organisationId.trim());
@@ -92,7 +95,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                 String ip_address = rs.getString("ip_address");
                 String port = rs.getString("port");
                 startAgent(port);
-
+                
                 Blob blob = rs.getBlob("photo");
                 if (blob != null) {
                     try {
@@ -109,33 +112,33 @@ public class OrganisationClient extends javax.swing.JFrame {
                 } else {
                     System.out.println("Blob is null");
                 }
-
+                
                 organisation_name_label.setText(organization_name);
                 ipaddress_label.setText(ip_address);
                 port_label.setText(port);
             }
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     DatagramSocket serverSocket;
-
+    
     private void closeSocket() {
         try {
             serverSocket.close();
         } catch (Exception e) {
         }
     }
-
+    
     class ServerThread extends Thread {
-
+        
         String portString;
-
+        
         private ServerThread(String portString) {
             this.portString = portString;
         }
-
+        
         public void run() {
             try {
                 int port = Integer.parseInt(portString);
@@ -153,7 +156,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                     String ftpPort = split[1];
                     String fileName = split[2];
                     new FileReceiverThread(adminIp, Integer.parseInt(ftpPort.trim()), fileName).start();
-
+                    
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -161,7 +164,7 @@ public class OrganisationClient extends javax.swing.JFrame {
         }
     }
     String deLimiter = "#######";
-
+    
     private void startAgent(String portString) {
         new ServerThread(portString).start();
     }
@@ -304,17 +307,17 @@ public class OrganisationClient extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        
     }
-
+    
 private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-
+    
     logout();
     // TODO add your handling code here:
 }//GEN-LAST:event_jLabel1MouseClicked
-
+    
 private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-
+    
     logout();
     // TODO add your handling code here:
 }//GEN-LAST:event_formWindowClosing
@@ -348,7 +351,7 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
+            
             public void run() {
                 new OrganisationClient().setVisible(true);
             }
