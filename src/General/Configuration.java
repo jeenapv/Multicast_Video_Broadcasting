@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 
 /**
@@ -35,6 +36,22 @@ public class Configuration {
             e.printStackTrace();
         }
     }
+     public static void setIconOnButton(String fileString, JButton button) {
+        // convert string file path to image icona and set on this label
+        BufferedImage img = null;
+        try {
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
+            img = ImageIO.read(new File(iconFolder + fileString));
+            Image scaledInstance = img.getScaledInstance(button.getWidth(), button.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(scaledInstance);
+            button.setIcon(imageIcon);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void initializeEnvironment() {
         try {
