@@ -252,7 +252,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
     }
     int packetDataSize = 100;
-    String deLimiter = "-#$@&-";
+    String deLimiter = "#######";
 
     public static int generateNewFTPPort(int min, int max) {
         Random rand = new Random();

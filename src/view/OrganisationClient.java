@@ -160,7 +160,7 @@ public class OrganisationClient extends javax.swing.JFrame {
             }
         }
     }
-    String deLimiter = "-#$@&-";
+    String deLimiter = "#######";
 
     private void startAgent(String portString) {
         new ServerThread(portString).start();

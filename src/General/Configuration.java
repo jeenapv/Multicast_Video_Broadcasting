@@ -69,6 +69,8 @@ public class Configuration {
             if (!f_presentationFolder.exists()) {
                 f_presentationFolder.mkdir();
             }
+            
+            findIpAddress();
 //
 //            File f_organisationImages = new File(organisationImages);
 //            if (!f_organisationImages.exists()) {
@@ -82,7 +84,7 @@ public class Configuration {
 
     }
 
-    private void findIpAddress() {
+    private static void findIpAddress() {
         try {
             String ipPattern = "192.168.1.";
             String ipAddress = "";
