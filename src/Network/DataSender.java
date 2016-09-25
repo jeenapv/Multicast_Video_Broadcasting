@@ -18,6 +18,7 @@ public class DataSender {
 
     public void sendNow(String sentence, String ipAddress, int port) {
         try {
+            System.out.println("sending " + sentence + " to "+ ipAddress+ " on port " + port);
             BufferedReader inFromUser =
                     new BufferedReader(new InputStreamReader(System.in));
             DatagramSocket clientSocket = new DatagramSocket();

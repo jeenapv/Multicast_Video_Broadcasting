@@ -13,10 +13,13 @@ package view;
 import db.Dbcon;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import javax.imageio.ImageIO;
@@ -41,7 +44,43 @@ public class OrganisationClient extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.organisationId = organisationId;
         loadOrganisationDetails();
+    }
 
+    class FileReceiverThread extends Thread {
+
+        String adminIp;
+        int ftpPort;
+        String fileName;
+
+        private FileReceiverThread(String adminIp, int ftpPort, String fileName) {
+            this.adminIp = adminIp;
+            this.ftpPort = ftpPort;
+            this.fileName = fileName;
+        }
+
+        public void run() {
+            System.out.println("File receiver thread started ");
+            try {
+                System.out.println("Client started");
+                Socket socket = new Socket(InetAddress.getByName(adminIp), ftpPort);
+                byte[] contents = new byte[10000];
+
+                FileOutputStream fos = new FileOutputStream(fileName);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                InputStream is = socket.getInputStream();
+
+                //No of bytes read in one read() call
+                int bytesRead = 0;
+                while ((bytesRead = is.read(contents)) != -1) {
+                    bos.write(contents, 0, bytesRead);
+                }
+                bos.flush();
+                socket.close();
+                System.out.println("File saved successfully!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void loadOrganisationDetails() {
@@ -109,6 +148,11 @@ public class OrganisationClient extends javax.swing.JFrame {
                     serverSocket.receive(receivePacket);
                     String sentence = new String(receivePacket.getData());
                     System.out.println("RECEIVED: " + sentence);
+                    String[] split = sentence.split(deLimiter);
+                    String adminIp = split[0];
+                    String ftpPort = split[1];
+                    String fileName = split[2];
+                    new FileReceiverThread(adminIp, Integer.parseInt(ftpPort.trim()), fileName).start();
 
                 }
             } catch (Exception e) {
@@ -116,6 +160,7 @@ public class OrganisationClient extends javax.swing.JFrame {
             }
         }
     }
+    String deLimiter = "-#$@&-";
 
     private void startAgent(String portString) {
         new ServerThread(portString).start();
@@ -140,6 +185,7 @@ public class OrganisationClient extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
+        file_open_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -148,7 +194,7 @@ public class OrganisationClient extends javax.swing.JFrame {
             }
         });
 
-        organisation_name_label.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        organisation_name_label.setFont(new java.awt.Font("Tahoma", 1, 18));
         organisation_name_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         organisation_name_label.setText("Organisation name");
 
@@ -172,6 +218,8 @@ public class OrganisationClient extends javax.swing.JFrame {
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Listner health : Active");
+
+        file_open_button.setText("Open");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -206,6 +254,10 @@ public class OrganisationClient extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(139, 139, 139)
+                .addComponent(file_open_button)
+                .addContainerGap(216, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,7 +283,9 @@ public class OrganisationClient extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(file_open_button)
+                .addGap(37, 37, 37))
         );
 
         pack();
@@ -301,6 +355,7 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton file_open_button;
     private javax.swing.JLabel ipaddress_label;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

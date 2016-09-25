@@ -11,11 +11,21 @@
 package view;
 
 import General.Configuration;
+import Network.DataSender;
 import db.Dbcon;
 import java.io.File;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  *
@@ -212,39 +222,138 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     adminHome.setVisible(true);
 }//GEN-LAST:event_jButton2ActionPerformed
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void launchPresentation() {
+        String presentationName = presentation_name.getText().trim();
+        try {
+            Dbcon dbcon = new Dbcon();
+            ResultSet select = dbcon.select("select file_name from tbl_create_presentation where name='" + presentationName + "'");
+            if (select.next()) {
+                String file_name = select.getString("file_name");
+                File presentationFile = new File(Configuration.presentationFolder + file_name);
 
-    String presentationName = presentation_name.getText().trim();
-    try {
-        Dbcon dbcon = new Dbcon();
-        ResultSet select = dbcon.select("select file_name from tbl_create_presentation where name='" + presentationName + "'");
-        if (select.next()) {
-            String file_name = select.getString("file_name");
-            File presentationFile = new File(Configuration.presentationFolder + file_name);
+                for (int i = 0; i < subscribtion_list_table.getRowCount(); i++) {
+                    String organisationName = (String) subscribtion_list_table.getValueAt(i, 1);
+                    String port = (String) subscribtion_list_table.getValueAt(i, 3);
+                    String ipAddress = (String) subscribtion_list_table.getValueAt(i, 4);
+                    System.out.println("organisationName " + organisationName);
+                    System.out.println("ipAddress " + ipAddress);
+                    System.out.println("port " + port);
+                    sendFileToOrganisation(organisationName, ipAddress, port, presentationFile);
 
-            for (int i = 0; i < subscribtion_list_table.getRowCount(); i++) {
-                String organisationName = (String) subscribtion_list_table.getValueAt(i, 1);
-                String port = (String) subscribtion_list_table.getValueAt(i, 3);
-                String ipAddress = (String) subscribtion_list_table.getValueAt(i, 4);
-                System.out.println("organisationName " + organisationName);
-                System.out.println("ipAddress " + ipAddress);
-                System.out.println("port " + port);
-                
-                // sending logic here
+                    // sending logic here
+
+                }
+
 
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    int packetDataSize = 100;
+    String deLimiter = "-#$@&-";
 
+    public static int generateNewFTPPort(int min, int max) {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
+    }
+
+    class FtpThread extends Thread {
+
+        int ftpPort;
+        String ipAddress;
+        File fileToBeSend;
+
+        private FtpThread(int ftpPort, String ipAddress, File fileToBeSend) {
+            this.ftpPort = ftpPort;
+            this.ipAddress = ipAddress;
+            this.fileToBeSend = fileToBeSend;
         }
 
+        public void run() {
+            System.out.println("FTP thread listening on " + ftpPort);
 
+            try {
+                ServerSocket ssock = new ServerSocket(ftpPort);
+                Socket socket = ssock.accept();
 
+                //The InetAddress specification
+                InetAddress IA = InetAddress.getByName(ipAddress);
 
+                //Specify the file
+                FileInputStream fis = new FileInputStream(fileToBeSend);
+                BufferedInputStream bis = new BufferedInputStream(fis);
 
+                //Get socket's output stream
+                OutputStream os = socket.getOutputStream();
 
-    } catch (Exception e) {
-        e.printStackTrace();
+                //Read File Contents into contents array 
+                byte[] contents;
+                long fileLength = fileToBeSend.length();
+                long current = 0;
+
+                long start = System.nanoTime();
+                while (current != fileLength) {
+                    int size = 10000;
+                    if (fileLength - current >= size) {
+                        current += size;
+                    } else {
+                        size = (int) (fileLength - current);
+                        current = fileLength;
+                    }
+                    contents = new byte[size];
+                    bis.read(contents, 0, size);
+                    os.write(contents);
+                    System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!");
+                }
+
+                os.flush();
+                //File transfer done. Close the socket connection!
+                socket.close();
+                ssock.close();
+                System.out.println("File sent succesfully!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
+
+    private void sendFileToOrganisation(String organisation, String ipAddress, String port, File fileToBeSend) {
+        System.out.println("Sending file " + fileToBeSend.getPath());
+        System.out.println("To " + ipAddress + " with port " + port);
+
+        int ftpPort = generateNewFTPPort(3000, 9999);
+
+        new FtpThread(ftpPort, ipAddress, fileToBeSend).start();
+        String vedioActivationString = Configuration.adminIp + deLimiter + ftpPort + deLimiter + fileToBeSend.getName();
+
+        DataSender dataSender = new DataSender();
+        dataSender.sendNow(vedioActivationString, ipAddress, Integer.parseInt(port));
+        // send ping request to client
+
+        try {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getStringFormat(byte[] dataArray) {
+        return Base64.encode(dataArray);
+    }
+
+    class launchThread extends Thread {
+
+        public void run() {
+            launchPresentation();
+        }
+    }
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+
+    new launchThread().start();
 
 }//GEN-LAST:event_jButton1ActionPerformed
 

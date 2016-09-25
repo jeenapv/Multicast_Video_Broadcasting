@@ -179,7 +179,7 @@ public class CreateNewPresentation extends javax.swing.JFrame {
                     || FilenameUtils.getExtension(filePath).equals("mov")
                     || FilenameUtils.getExtension(filePath).equals("3gp")
                     || FilenameUtils.getExtension(filePath).equals("mp4")
-                    || FilenameUtils.getExtension(filePath).equals("mpg")) {
+                    || FilenameUtils.getExtension(filePath).equals("txt")) {
                 fileName = chooser.getSelectedFile().getName();
                 BufferedImage img = null;
                 size = (chooser.getSelectedFile().length()) / 1024;
