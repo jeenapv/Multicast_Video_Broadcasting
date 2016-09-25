@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import db.Dbcon;
+import java.sql.ResultSet;
 
 /**
  *
@@ -15,9 +17,62 @@ public class LaunchPresentation extends javax.swing.JFrame {
     /**
      * Creates new form LaunchPresentation
      */
+    String defaultPresentationName = null;
+
     public LaunchPresentation() {
         initComponents();
         this.setLocationRelativeTo(null);
+        launch_button.setEnabled(false);
+        loadPresentations();
+    }
+
+    public LaunchPresentation(String presentationName) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        launch_button.setEnabled(false);
+        defaultPresentationName = presentationName;
+        loadPresentations();
+    }
+
+    private void loadPresentations() {
+        Dbcon dbcon = new Dbcon();
+        String sql = "select * from tbl_create_presentation order by id desc";
+        ResultSet rs = dbcon.select(sql);
+        boolean presentationFound = false;
+        try {
+            presentation_name_combo.removeAllItems();
+            while (rs.next()) {
+                presentation_name_combo.addItem(rs.getString("name"));
+                presentationFound = true;
+            }
+            if (presentationFound) {
+                if (defaultPresentationName != null) {
+                    presentation_name_combo.setSelectedItem(defaultPresentationName);
+                }
+                loadMulticastList();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadMulticastList() {
+        Dbcon dbcon = new Dbcon();
+        String sql = "select * from tbl_subscription order by id desc";
+        ResultSet rs = dbcon.select(sql);
+        try {
+            boolean multicastListFound = false;
+            multicast_list_combo.removeAllItems();
+            while (rs.next()) {
+                multicast_list_combo.addItem(rs.getString("subscription_name"));
+                multicastListFound = true;
+            }
+            if (multicastListFound) {
+                launch_button.setEnabled(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -31,24 +86,22 @@ public class LaunchPresentation extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        presentation_name_combo = new javax.swing.JComboBox();
+        launch_button = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        multicast_list_combo = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("LAUNCH PRESENTATION");
 
-        jLabel2.setText("Choose Multicast:");
+        jLabel2.setText("Choose Presentation:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jButton1.setText("LAUNCH");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        launch_button.setText("LAUNCH");
+        launch_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                launch_buttonActionPerformed(evt);
             }
         });
 
@@ -59,9 +112,7 @@ public class LaunchPresentation extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Choose Presentation:");
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel3.setText("Choose Multicast:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,13 +131,13 @@ public class LaunchPresentation extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox1, 0, 134, Short.MAX_VALUE)
-                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(presentation_name_combo, 0, 134, Short.MAX_VALUE)
+                            .addComponent(multicast_list_combo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(88, 88, 88)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(launch_button, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -97,15 +148,15 @@ public class LaunchPresentation extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(presentation_name_combo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(multicast_list_combo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(launch_button, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
@@ -114,14 +165,19 @@ public class LaunchPresentation extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        this.dispose();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_jButton1ActionPerformed
+private void launch_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_launch_buttonActionPerformed
+
+    this.dispose();
+    String presentation = presentation_name_combo.getSelectedItem().toString();
+    String multicastListName = multicast_list_combo.getSelectedItem().toString();
+    new LaunchingFrame(presentation, multicastListName).setVisible(true);
+    // TODO add your handling code here:
+}//GEN-LAST:event_launch_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -152,19 +208,19 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new LaunchPresentation().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton launch_button;
+    private javax.swing.JComboBox multicast_list_combo;
+    private javax.swing.JComboBox presentation_name_combo;
     // End of variables declaration//GEN-END:variables
 }

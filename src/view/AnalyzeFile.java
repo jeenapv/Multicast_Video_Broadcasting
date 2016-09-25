@@ -15,6 +15,8 @@ import java.sql.SQLException;
  */
 public class AnalyzeFile extends javax.swing.JFrame {
 
+    String presentationName = null;
+
     /**
      * Creates new form AnalyzeFile
      */
@@ -22,13 +24,14 @@ public class AnalyzeFile extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
-    public AnalyzeFile(String fileName, String fileSize) {
+
+    public AnalyzeFile(String fileName, String fileSize, String presentationName) {
         initComponents();
         this.setLocationRelativeTo(null);
         file_name_text.setText(fileName);
         file_size_text.setText(fileSize + " Kb");
-        
+        this.presentationName = presentationName;
+
     }
 
     /**
@@ -94,9 +97,9 @@ public class AnalyzeFile extends javax.swing.JFrame {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton3))
                             .addComponent(file_size_text, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(23, Short.MAX_VALUE))
@@ -116,21 +119,21 @@ public class AnalyzeFile extends javax.swing.JFrame {
                     .addComponent(file_size_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton2))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
         AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
-    
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         Dbcon dbcon = new Dbcon();
@@ -142,11 +145,14 @@ public class AnalyzeFile extends javax.swing.JFrame {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
+
     }//GEN-LAST:event_formWindowOpened
 
 private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-// TODO add your handling code here:
+
+    this.dispose();
+    new LaunchPresentation(presentationName).setVisible(true);
+    // TODO add your handling code here:
 }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -178,7 +184,7 @@ private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            
+
             public void run() {
                 new AnalyzeFile().setVisible(true);
             }

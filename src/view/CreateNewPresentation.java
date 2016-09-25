@@ -158,7 +158,7 @@ public class CreateNewPresentation extends javax.swing.JFrame {
                 + " created_at)values('" + presentationName + "', '" + newFileName + "','" + size + "','" + System.currentTimeMillis() + "')");
         if (ins > 0) {
             this.dispose();
-            AnalyzeFile analyzeFile = new AnalyzeFile(newFileName, size + "");
+            AnalyzeFile analyzeFile = new AnalyzeFile(newFileName, size + "", presentationName);
             analyzeFile.setVisible(true);
         }
 
