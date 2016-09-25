@@ -38,7 +38,7 @@ public class LaunchingFrame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-
+    
     public LaunchingFrame(String presentation, String multicastListName) {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -46,7 +46,7 @@ public class LaunchingFrame extends javax.swing.JFrame {
         subscription_list.setText(multicastListName);
         loadOrganisations(multicastListName);
     }
-
+    
     private void loadOrganisations(String subscribtionName) {
         try {
             String sql = "SELECT * FROM tbl_subscription AS sub WHERE sub.subscription_name='" + subscribtionName.trim() + "'";
@@ -55,9 +55,9 @@ public class LaunchingFrame extends javax.swing.JFrame {
             if (select.next()) {
                 String subscriptionId = select.getString("id");
                 ResultSet rs = dbcon.select("select org.organization_name,org.ip_address,org.port from tbl_subscription_list as sub, tbl_organization as org where sub.organization_id=org.organization_id and subscription_id=" + subscriptionId);
-
+                
                 Object arr[] = new Object[10];
-
+                
                 int count = 0;
                 DefaultTableModel model = (DefaultTableModel) subscribtion_list_table.getModel();
                 while (rs.next()) {
@@ -69,9 +69,6 @@ public class LaunchingFrame extends javax.swing.JFrame {
                     arr[4] = rs.getString("ip_address");
                     model.addRow(arr);
                 }
-
-
-
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Such a scubsciption could not be found now");
             }
@@ -98,7 +95,6 @@ public class LaunchingFrame extends javax.swing.JFrame {
         subscribtion_list_table = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
-        progress_bar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -184,9 +180,7 @@ public class LaunchingFrame extends javax.swing.JFrame {
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(progress_bar, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(276, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,11 +198,9 @@ public class LaunchingFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progress_bar, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
@@ -221,7 +213,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     AdminHome adminHome = new AdminHome();
     adminHome.setVisible(true);
 }//GEN-LAST:event_jButton2ActionPerformed
-
+    
     private void launchPresentation() {
         String presentationName = presentation_name.getText().trim();
         try {
@@ -230,7 +222,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             if (select.next()) {
                 String file_name = select.getString("file_name");
                 File presentationFile = new File(Configuration.presentationFolder + file_name);
-
+                
                 for (int i = 0; i < subscribtion_list_table.getRowCount(); i++) {
                     String organisationName = (String) subscribtion_list_table.getValueAt(i, 1);
                     String port = (String) subscribtion_list_table.getValueAt(i, 3);
@@ -239,50 +231,49 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     System.out.println("ipAddress " + ipAddress);
                     System.out.println("port " + port);
                     sendFileToOrganisation(organisationName, ipAddress, port, presentationFile);
-
+                    subscribtion_list_table.setValueAt(true, i, 2);
                     // sending logic here
-
                 }
-
-
+                JOptionPane.showMessageDialog(rootPane, "Presentation is on air");
             }
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     int packetDataSize = 100;
     String deLimiter = "#######";
-
+    
     public static int generateNewFTPPort(int min, int max) {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
     }
-
+    
     class FtpThread extends Thread {
-
+        
         int ftpPort;
         String ipAddress;
         File fileToBeSend;
-
+        
         private FtpThread(int ftpPort, String ipAddress, File fileToBeSend) {
             this.ftpPort = ftpPort;
             this.ipAddress = ipAddress;
             this.fileToBeSend = fileToBeSend;
         }
-
+        
         public void run() {
             System.out.println("FTP thread listening on " + ftpPort);
-
+            
             try {
                 ServerSocket ssock = new ServerSocket(ftpPort);
                 Socket socket = ssock.accept();
 
                 //The InetAddress specification
-                InetAddress IA = InetAddress.getByName(ipAddress);
+                InetAddress IA = InetAddress.getByName(Configuration.adminIp);
 
                 //Specify the file
+                System.out.println("File to be sent " + fileToBeSend.getAbsolutePath());
                 FileInputStream fis = new FileInputStream(fileToBeSend);
                 BufferedInputStream bis = new BufferedInputStream(fis);
 
@@ -293,7 +284,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 byte[] contents;
                 long fileLength = fileToBeSend.length();
                 long current = 0;
-
+                
                 long start = System.nanoTime();
                 while (current != fileLength) {
                     int size = 10000;
@@ -308,7 +299,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     os.write(contents);
                     System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!");
                 }
-
+                
                 os.flush();
                 //File transfer done. Close the socket connection!
                 socket.close();
@@ -317,19 +308,19 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            
         }
     }
-
+    
     private void sendFileToOrganisation(String organisation, String ipAddress, String port, File fileToBeSend) {
         System.out.println("Sending file " + fileToBeSend.getPath());
         System.out.println("To " + ipAddress + " with port " + port);
-
+        
         int ftpPort = generateNewFTPPort(3000, 9999);
-
+        
         new FtpThread(ftpPort, ipAddress, fileToBeSend).start();
         String vedioActivationString = Configuration.adminIp + deLimiter + ftpPort + deLimiter + fileToBeSend.getName();
-
+        
         DataSender dataSender = new DataSender();
         dataSender.sendNow(vedioActivationString, ipAddress, Integer.parseInt(port));
         // send ping request to client
@@ -339,22 +330,22 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             e.printStackTrace();
         }
     }
-
+    
     public static String getStringFormat(byte[] dataArray) {
         return Base64.encode(dataArray);
     }
-
+    
     class launchThread extends Thread {
-
+        
         public void run() {
             launchPresentation();
         }
     }
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-
+    
+    
     new launchThread().start();
-
+    
 }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -386,7 +377,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
+            
             public void run() {
                 new LaunchingFrame().setVisible(true);
             }
@@ -400,7 +391,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField presentation_name;
-    private javax.swing.JProgressBar progress_bar;
     private javax.swing.JTable subscribtion_list_table;
     private javax.swing.JTextField subscription_list;
     // End of variables declaration//GEN-END:variables
