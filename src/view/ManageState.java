@@ -9,6 +9,7 @@ package view;
 import db.Dbcon;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -211,8 +212,15 @@ public class ManageState extends javax.swing.JFrame {
          String state_id = tbl_states.getValueAt(tbl_states.getSelectedRow(), 0).toString(); 
         String state_name= name.getText();
         String desc=description.getText();
-        Dbcon dbcon=new Dbcon();
+         if (state_name.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter name");
+        } else if (desc.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter description");
+        }else{
+            Dbcon dbcon=new Dbcon();
         dbcon.update("update tbl_state set state_name='"+state_name+"', description='"+desc+"' where state_id='"+state_id+"'");
+        }
+        
     }//GEN-LAST:event_save_buttonActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

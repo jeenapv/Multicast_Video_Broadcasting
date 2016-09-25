@@ -141,6 +141,8 @@ public class AnalyzeFile extends javax.swing.JFrame {
         try {
             if (rs.next()) {
                 String id = rs.getString(1);
+                file_name_text.setEditable(false);
+                file_size_text.setEditable(false);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

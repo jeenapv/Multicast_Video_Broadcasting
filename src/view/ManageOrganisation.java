@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import db.Dbcon;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,6 +18,14 @@ import javax.swing.table.DefaultTableModel;
  * @author Jithinpv
  */
 public class ManageOrganisation extends javax.swing.JFrame {
+
+    private Pattern pattern;
+    private Matcher matcher;
+    private static final String IPADDRESS_PATTERN
+            = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
     /**
      * Creates new form ManageOrganisation
@@ -25,6 +35,7 @@ public class ManageOrganisation extends javax.swing.JFrame {
         loadAllOrg();
         this.setLocationRelativeTo(null);
     }
+
     private void loadAllOrg() {
         DefaultTableModel model = (DefaultTableModel) tbl_org.getModel();
         String arr[] = new String[3];
@@ -43,6 +54,7 @@ public class ManageOrganisation extends javax.swing.JFrame {
                 edit_button.setEnabled(false);
                 save_button.setEnabled(false);
                 port.setEditable(false);
+                ip.setEditable(false);
 
             }
         } catch (SQLException ex) {
@@ -73,6 +85,8 @@ public class ManageOrganisation extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         port = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        ip = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -145,39 +159,47 @@ public class ManageOrganisation extends javax.swing.JFrame {
 
         jLabel4.setText("PORT");
 
+        jLabel5.setText("IP ADDRESS");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(edit_button)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(save_button)
+                .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(176, 176, 176)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                                .addComponent(ip, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(176, 176, 176)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel3)))
                         .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                             .addComponent(name)
-                            .addComponent(port)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(276, 276, 276)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(edit_button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(save_button)))
+                            .addComponent(port))))
                 .addGap(19, 29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -185,7 +207,7 @@ public class ManageOrganisation extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -203,15 +225,20 @@ public class ManageOrganisation extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(43, 43, 43)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(edit_button)
-                            .addComponent(save_button)))
+                            .addComponent(jLabel5)
+                            .addComponent(ip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(46, 46, 46))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(edit_button)
+                    .addComponent(save_button))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         pack();
@@ -219,8 +246,8 @@ public class ManageOrganisation extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        AdminHome home=new AdminHome();
+        this.dispose();
+        AdminHome home = new AdminHome();
         home.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -236,6 +263,7 @@ public class ManageOrganisation extends javax.swing.JFrame {
                     name.setText(rs.getString("organization_name"));
                     description.setText(rs.getString("description"));
                     port.setText(rs.getString("port"));
+                    ip.setText(rs.getString(rs.getShort("ip_address")));
                     edit_button.setEnabled(true);
                     save_button.setEnabled(true);
                 }
@@ -250,16 +278,47 @@ public class ManageOrganisation extends javax.swing.JFrame {
         name.setEditable(true);
         description.setEditable(true);
         port.setEditable(true);
+        ip.setEditable(true);
     }//GEN-LAST:event_edit_buttonActionPerformed
 
     private void save_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_buttonActionPerformed
         // TODO add your handling code here:
-         String org_id = tbl_org.getValueAt(tbl_org.getSelectedRow(), 0).toString(); 
-        String org_name= name.getText();
-        String desc=description.getText();
-       String ip_port= port.getText();
-        Dbcon dbcon=new Dbcon();
-        dbcon.update("update tbl_organization set organization_name='"+org_name+"', description='"+desc+"',port='"+ip_port+"' where organization_id='"+org_id+"'");
+        String org_id = tbl_org.getValueAt(tbl_org.getSelectedRow(), 0).toString();
+        String org_name = name.getText();
+        String desc = description.getText();
+        String ip_port = port.getText();
+        String ip_address = ip.getText();
+
+        matcher = pattern.matcher(ip_address);
+
+        int portNo = Integer.parseInt(ip_port);
+        if (org_name.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter name");
+        } else if (desc.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter description");
+        } else if (ip_port.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter port");
+        } else if (ip_address.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter ip address");
+        } else if (!matcher.matches()) {
+            JOptionPane.showMessageDialog(rootPane, "Enter proper IP Address");
+            return;
+        } else if (portNo < 1024 || portNo > 10000) {
+            try {
+
+                JOptionPane.showMessageDialog(rootPane, "Port must be within range 1024 - 10000 ");
+                return;
+
+            } catch (NumberFormatException ne) {
+                JOptionPane.showMessageDialog(rootPane, "Enter an integer for port");
+                return;
+            }
+        } else {
+
+            Dbcon dbcon = new Dbcon();
+            dbcon.update("update tbl_organization set organization_name='" + org_name + "', description='" + desc + "',port='" + ip_port + "',ip_address='" + ip_address + "' where organization_id='" + org_id + "'");
+        }
+
     }//GEN-LAST:event_save_buttonActionPerformed
 
     /**
@@ -300,11 +359,13 @@ public class ManageOrganisation extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea description;
     private javax.swing.JButton edit_button;
+    private javax.swing.JTextField ip;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField name;

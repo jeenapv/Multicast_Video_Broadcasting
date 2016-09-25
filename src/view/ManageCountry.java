@@ -8,6 +8,7 @@ package view;
 import db.Dbcon;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -207,8 +208,15 @@ public class ManageCountry extends javax.swing.JFrame {
         String country_id = tbl_countries.getValueAt(tbl_countries.getSelectedRow(), 0).toString(); 
         String country_name= name.getText();
         String desc=description.getText();
-        Dbcon dbcon=new Dbcon();
+        if (country_name.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter name");
+        } else if (desc.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter description");
+        }else{
+            Dbcon dbcon=new Dbcon();
         dbcon.update("update tbl_country set country_name='"+country_name+"', description='"+desc+"' where country_id='"+country_id+"'");
+        }
+        
     }//GEN-LAST:event_save_buttonActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
