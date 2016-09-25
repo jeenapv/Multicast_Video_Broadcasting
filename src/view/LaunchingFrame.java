@@ -38,7 +38,7 @@ public class LaunchingFrame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
+
     public LaunchingFrame(String presentation, String multicastListName) {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -46,7 +46,7 @@ public class LaunchingFrame extends javax.swing.JFrame {
         subscription_list.setText(multicastListName);
         loadOrganisations(multicastListName);
     }
-    
+
     private void loadOrganisations(String subscribtionName) {
         try {
             String sql = "SELECT * FROM tbl_subscription AS sub WHERE sub.subscription_name='" + subscribtionName.trim() + "'";
@@ -55,9 +55,9 @@ public class LaunchingFrame extends javax.swing.JFrame {
             if (select.next()) {
                 String subscriptionId = select.getString("id");
                 ResultSet rs = dbcon.select("select org.organization_name,org.ip_address,org.port from tbl_subscription_list as sub, tbl_organization as org where sub.organization_id=org.organization_id and subscription_id=" + subscriptionId);
-                
+
                 Object arr[] = new Object[10];
-                
+
                 int count = 0;
                 DefaultTableModel model = (DefaultTableModel) subscribtion_list_table.getModel();
                 while (rs.next()) {
@@ -213,7 +213,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     AdminHome adminHome = new AdminHome();
     adminHome.setVisible(true);
 }//GEN-LAST:event_jButton2ActionPerformed
-    
+
     private void launchPresentation() {
         String presentationName = presentation_name.getText().trim();
         try {
@@ -222,7 +222,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             if (select.next()) {
                 String file_name = select.getString("file_name");
                 File presentationFile = new File(Configuration.presentationFolder + file_name);
-                
+
                 for (int i = 0; i < subscribtion_list_table.getRowCount(); i++) {
                     String organisationName = (String) subscribtion_list_table.getValueAt(i, 1);
                     String port = (String) subscribtion_list_table.getValueAt(i, 3);
@@ -236,35 +236,35 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 }
                 JOptionPane.showMessageDialog(rootPane, "Presentation is on air");
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     int packetDataSize = 100;
     String deLimiter = "#######";
-    
+
     public static int generateNewFTPPort(int min, int max) {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
     }
-    
-    class FtpThread extends Thread {
-        
+
+    class PresentationEmmiterThread extends Thread {
+
         int ftpPort;
         String ipAddress;
         File fileToBeSend;
-        
-        private FtpThread(int ftpPort, String ipAddress, File fileToBeSend) {
+
+        private PresentationEmmiterThread(int ftpPort, String ipAddress, File fileToBeSend) {
             this.ftpPort = ftpPort;
             this.ipAddress = ipAddress;
             this.fileToBeSend = fileToBeSend;
         }
-        
+
         public void run() {
             System.out.println("FTP thread listening on " + ftpPort);
-            
+
             try {
                 ServerSocket ssock = new ServerSocket(ftpPort);
                 Socket socket = ssock.accept();
@@ -284,7 +284,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 byte[] contents;
                 long fileLength = fileToBeSend.length();
                 long current = 0;
-                
+
                 long start = System.nanoTime();
                 while (current != fileLength) {
                     int size = 10000;
@@ -299,7 +299,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     os.write(contents);
                     System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!");
                 }
-                
+
                 os.flush();
                 //File transfer done. Close the socket connection!
                 socket.close();
@@ -308,19 +308,19 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
         }
     }
-    
+
     private void sendFileToOrganisation(String organisation, String ipAddress, String port, File fileToBeSend) {
         System.out.println("Sending file " + fileToBeSend.getPath());
         System.out.println("To " + ipAddress + " with port " + port);
-        
+
         int ftpPort = generateNewFTPPort(3000, 9999);
-        
-        new FtpThread(ftpPort, ipAddress, fileToBeSend).start();
+
+        new PresentationEmmiterThread(ftpPort, ipAddress, fileToBeSend).start();
         String vedioActivationString = Configuration.adminIp + deLimiter + ftpPort + deLimiter + fileToBeSend.getName();
-        
+
         DataSender dataSender = new DataSender();
         dataSender.sendNow(vedioActivationString, ipAddress, Integer.parseInt(port));
         // send ping request to client
@@ -330,22 +330,22 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             e.printStackTrace();
         }
     }
-    
+
     public static String getStringFormat(byte[] dataArray) {
         return Base64.encode(dataArray);
     }
-    
+
     class launchThread extends Thread {
-        
+
         public void run() {
             launchPresentation();
         }
     }
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    
-    
+
+
     new launchThread().start();
-    
+
 }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -377,7 +377,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            
+
             public void run() {
                 new LaunchingFrame().setVisible(true);
             }
