@@ -54,13 +54,13 @@ public class OrganisationClient extends javax.swing.JFrame {
         loadOrganisationDetails();
     }
 
-    class FileReceiverThread extends Thread {
+    class PresentationReceiverThread extends Thread {
 
         String adminIp;
         int ftpPort;
         String fileName;
 
-        private FileReceiverThread(String adminIp, int ftpPort, String fileName) {
+        private PresentationReceiverThread(String adminIp, int ftpPort, String fileName) {
             this.adminIp = adminIp;
             this.ftpPort = ftpPort;
             this.fileName = fileName;
@@ -167,7 +167,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                     String adminIp = split[0];
                     String ftpPort = split[1];
                     String fileName = split[2];
-                    new FileReceiverThread(adminIp, Integer.parseInt(ftpPort.trim()), fileName).start();
+                    new PresentationReceiverThread(adminIp, Integer.parseInt(ftpPort.trim()), fileName).start();
 
                 }
             } catch (Exception e) {
