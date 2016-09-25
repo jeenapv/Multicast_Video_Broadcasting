@@ -10,7 +10,9 @@
  */
 package view;
 
+import General.Configuration;
 import db.Dbcon;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -32,41 +34,48 @@ import javax.swing.JOptionPane;
  * @author kakes
  */
 public class OrganisationClient extends javax.swing.JFrame {
-    
-    String organisationId;
 
-    /** Creates new form OrganisationClient */
+    String organisationId;
+    File lastReceivedFile = null;
+
+    /**
+     * Creates new form OrganisationClient
+     */
     public OrganisationClient() {
         initComponents();
+        file_open_button.setEnabled(false);
     }
-    
+
     public OrganisationClient(String organisationId) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.organisationId = organisationId;
+        file_open_button.setEnabled(false);
         loadOrganisationDetails();
     }
-    
+
     class FileReceiverThread extends Thread {
-        
+
         String adminIp;
         int ftpPort;
         String fileName;
-        
+
         private FileReceiverThread(String adminIp, int ftpPort, String fileName) {
             this.adminIp = adminIp;
             this.ftpPort = ftpPort;
             this.fileName = fileName;
         }
-        
+
         public void run() {
             System.out.println("File receiver thread started ");
             try {
                 System.out.println("Client started");
                 Socket socket = new Socket(InetAddress.getByName(adminIp), ftpPort);
                 byte[] contents = new byte[10000];
-                
-                File fileToBeCreated = new File(fileName);
+
+                File temporaryFolder = new File(Configuration.tempFiles + System.currentTimeMillis() + "/");
+                temporaryFolder.mkdir();
+                File fileToBeCreated = new File(temporaryFolder + "file_" + fileName.trim());
                 System.out.println("Creating file " + fileToBeCreated.getAbsolutePath());
                 FileOutputStream fos = new FileOutputStream(fileToBeCreated);
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -80,12 +89,15 @@ public class OrganisationClient extends javax.swing.JFrame {
                 bos.flush();
                 socket.close();
                 System.out.println("File saved successfully!");
+                lastReceivedFile = fileToBeCreated;
+                JOptionPane.showMessageDialog(rootPane, "Video presentation received!");
+                file_open_button.setEnabled(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-    
+
     private void loadOrganisationDetails() {
         try {
             ResultSet rs = new Dbcon().select("select * from tbl_organization where organization_id=" + organisationId.trim());
@@ -95,7 +107,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                 String ip_address = rs.getString("ip_address");
                 String port = rs.getString("port");
                 startAgent(port);
-                
+
                 Blob blob = rs.getBlob("photo");
                 if (blob != null) {
                     try {
@@ -112,33 +124,33 @@ public class OrganisationClient extends javax.swing.JFrame {
                 } else {
                     System.out.println("Blob is null");
                 }
-                
+
                 organisation_name_label.setText(organization_name);
                 ipaddress_label.setText(ip_address);
                 port_label.setText(port);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     DatagramSocket serverSocket;
-    
+
     private void closeSocket() {
         try {
             serverSocket.close();
         } catch (Exception e) {
         }
     }
-    
+
     class ServerThread extends Thread {
-        
+
         String portString;
-        
+
         private ServerThread(String portString) {
             this.portString = portString;
         }
-        
+
         public void run() {
             try {
                 int port = Integer.parseInt(portString);
@@ -156,7 +168,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                     String ftpPort = split[1];
                     String fileName = split[2];
                     new FileReceiverThread(adminIp, Integer.parseInt(ftpPort.trim()), fileName).start();
-                    
+
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -164,15 +176,15 @@ public class OrganisationClient extends javax.swing.JFrame {
         }
     }
     String deLimiter = "#######";
-    
+
     private void startAgent(String portString) {
         new ServerThread(portString).start();
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -197,7 +209,7 @@ public class OrganisationClient extends javax.swing.JFrame {
             }
         });
 
-        organisation_name_label.setFont(new java.awt.Font("Tahoma", 1, 18));
+        organisation_name_label.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         organisation_name_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         organisation_name_label.setText("Organisation name");
 
@@ -223,23 +235,17 @@ public class OrganisationClient extends javax.swing.JFrame {
         jLabel2.setText("Listner health : Active");
 
         file_open_button.setText("Open");
+        file_open_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                file_open_buttonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(115, 115, 115)
-                        .addComponent(org_image_label, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(organisation_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+            .addComponent(jSeparator1)
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,16 +257,26 @@ public class OrganisationClient extends javax.swing.JFrame {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(ipaddress_label, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(87, Short.MAX_VALUE))
-            .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jSeparator2)
             .addGroup(layout.createSequentialGroup()
                 .addGap(139, 139, 139)
                 .addComponent(file_open_button)
-                .addContainerGap(216, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(115, 115, 115)
+                        .addComponent(org_image_label, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(organisation_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,7 +285,7 @@ public class OrganisationClient extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(organisation_name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(org_image_label, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -307,20 +323,29 @@ public class OrganisationClient extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
 private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-    
+
     logout();
     // TODO add your handling code here:
 }//GEN-LAST:event_jLabel1MouseClicked
-    
+
 private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-    
+
     logout();
     // TODO add your handling code here:
 }//GEN-LAST:event_formWindowClosing
+
+    private void file_open_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_file_open_buttonActionPerformed
+        try {
+            Desktop.getDesktop().open(lastReceivedFile);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "File could not be opened!");
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_file_open_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -351,7 +376,7 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            
+
             public void run() {
                 new OrganisationClient().setVisible(true);
             }

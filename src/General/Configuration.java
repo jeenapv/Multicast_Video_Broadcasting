@@ -27,6 +27,7 @@ public class Configuration {
     public static String iconFolder = "images/";
     public static String organisationIconFolder = "organisationIconFolder/";
     public static String presentationFolder = "presentationFolder/";
+    public static String tempFiles = "tempFiles/";
     public static String adminIp = null;
 
     public static void setIconOnLabel(String fileString, JLabel label) {
@@ -68,6 +69,11 @@ public class Configuration {
             File f_presentationFolder = new File(presentationFolder);
             if (!f_presentationFolder.exists()) {
                 f_presentationFolder.mkdir();
+            }
+            
+            File f_tempFiles = new File(tempFiles);
+            if (!f_tempFiles.exists()) {
+                f_tempFiles.mkdir();
             }
             
             findIpAddress();
