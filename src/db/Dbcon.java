@@ -29,7 +29,7 @@ public class Dbcon {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             //con = DriverManager.getConnection("jdbc:mysql://localhost/multicast_video_broadcasting", "root", "root");
-            con = DriverManager.getConnection("jdbc:mysql://kakes-pc/multicast_video_broadcasting", "root", "root");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/multicast_video_broadcasting", "root", "root");
             stmt = con.createStatement();
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -10,6 +10,7 @@
  */
 package view;
 
+import General.Configuration;
 import db.Dbcon;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -26,6 +27,7 @@ public class SelfLaunch extends javax.swing.JFrame {
     public SelfLaunch() {
         initComponents();
         this.setLocationRelativeTo(null);
+        Configuration.setIconOnLabel("launch-present.jpg", jLabel1);
     }
 
     /** This method is called from within the constructor to
@@ -40,8 +42,10 @@ public class SelfLaunch extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         process_status = new javax.swing.JLabel();
         ip_address_text = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setText("LAUNCH");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -49,38 +53,15 @@ public class SelfLaunch extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(154, 109, 82, 72));
 
         process_status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         process_status.setText("Launch");
+        getContentPane().add(process_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 187, 380, 27));
+        getContentPane().add(ip_address_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 11, 187, 25));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(154, 154, 154)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(process_status, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(203, Short.MAX_VALUE)
-                        .addComponent(ip_address_text, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ip_address_text, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(process_status, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
-        );
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 410, 310));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -228,6 +209,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ip_address_text;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel process_status;
     // End of variables declaration//GEN-END:variables
 }

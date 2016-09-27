@@ -10,6 +10,7 @@
  */
 package view;
 
+import General.Configuration;
 import db.Dbcon;
 import java.sql.ResultSet;
 import java.util.regex.Matcher;
@@ -38,6 +39,7 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
         loadAllOrganisation();
         save_button.setEnabled(false);
         pattern = Pattern.compile(IPADDRESS_PATTERN);
+         Configuration.setIconOnLabel("launch_sample.jpg", jLabel3);
     }
 
     private void loadAllOrganisation() {
@@ -90,8 +92,10 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
         port_text = new javax.swing.JTextField();
         save_button = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         all_organisation.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -118,12 +122,16 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(all_organisation);
-        all_organisation.getColumnModel().getColumn(0).setMinWidth(50);
-        all_organisation.getColumnModel().getColumn(0).setPreferredWidth(50);
-        all_organisation.getColumnModel().getColumn(0).setMaxWidth(50);
-        all_organisation.getColumnModel().getColumn(6).setMinWidth(0);
-        all_organisation.getColumnModel().getColumn(6).setPreferredWidth(0);
-        all_organisation.getColumnModel().getColumn(6).setMaxWidth(0);
+        if (all_organisation.getColumnModel().getColumnCount() > 0) {
+            all_organisation.getColumnModel().getColumn(0).setMinWidth(50);
+            all_organisation.getColumnModel().getColumn(0).setPreferredWidth(50);
+            all_organisation.getColumnModel().getColumn(0).setMaxWidth(50);
+            all_organisation.getColumnModel().getColumn(6).setMinWidth(0);
+            all_organisation.getColumnModel().getColumn(6).setPreferredWidth(0);
+            all_organisation.getColumnModel().getColumn(6).setMaxWidth(0);
+        }
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 14, 590, 240));
 
         jButton1.setText("Launch");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -131,10 +139,15 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 125, -1));
 
         jLabel1.setText("Ip Address");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(184, 264, 72, -1));
+        getContentPane().add(ip_address_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(266, 261, 176, -1));
 
         jLabel2.setText("Port");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(452, 264, 37, -1));
+        getContentPane().add(port_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(493, 261, 80, -1));
 
         save_button.setText("Save");
         save_button.addActionListener(new java.awt.event.ActionListener() {
@@ -142,6 +155,7 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
                 save_buttonActionPerformed(evt);
             }
         });
+        getContentPane().add(save_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(591, 260, -1, -1));
 
         jButton2.setText("Home");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -149,46 +163,10 @@ public class ViewAllOrganisations extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(523, 289, 125, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ip_address_text, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(port_text, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(save_button)))
-                .addGap(5, 5, 5))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1)
-                    .addComponent(ip_address_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(port_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(save_button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap(24, Short.MAX_VALUE))
-        );
+        jLabel3.setText("jLabel3");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(4, -6, 650, 350));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -368,6 +346,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField port_text;
     private javax.swing.JButton save_button;

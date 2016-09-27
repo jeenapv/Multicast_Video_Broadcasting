@@ -37,6 +37,7 @@ public class LaunchingFrame extends javax.swing.JFrame {
     public LaunchingFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
+        Configuration.setIconOnLabel("launch-present.jpg", jLabel3);
     }
 
     public LaunchingFrame(String presentation, String multicastListName) {
@@ -45,6 +46,7 @@ public class LaunchingFrame extends javax.swing.JFrame {
         presentation_name.setText(presentation);
         subscription_list.setText(multicastListName);
         loadOrganisations(multicastListName);
+        Configuration.setIconOnLabel("launch-present.jpg", jLabel3);
     }
 
     private void loadOrganisations(String subscribtionName) {
@@ -95,10 +97,13 @@ public class LaunchingFrame extends javax.swing.JFrame {
         subscribtion_list_table = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Launching presentation");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 24, 133, 30));
 
         jButton2.setText("HOME");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -106,12 +111,16 @@ public class LaunchingFrame extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 326, 78, 25));
 
         presentation_name.setEditable(false);
+        getContentPane().add(presentation_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(193, 24, 185, 30));
 
         jLabel2.setText("Launching to");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 65, 133, 30));
 
         subscription_list.setEditable(false);
+        getContentPane().add(subscription_list, new org.netbeans.lib.awtextra.AbsoluteConstraints(193, 65, 185, 30));
 
         subscribtion_list_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -137,15 +146,20 @@ public class LaunchingFrame extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(subscribtion_list_table);
-        subscribtion_list_table.getColumnModel().getColumn(0).setMinWidth(50);
-        subscribtion_list_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        subscribtion_list_table.getColumnModel().getColumn(0).setMaxWidth(50);
-        subscribtion_list_table.getColumnModel().getColumn(3).setMinWidth(0);
-        subscribtion_list_table.getColumnModel().getColumn(3).setPreferredWidth(0);
-        subscribtion_list_table.getColumnModel().getColumn(3).setMaxWidth(0);
-        subscribtion_list_table.getColumnModel().getColumn(4).setMinWidth(0);
-        subscribtion_list_table.getColumnModel().getColumn(4).setPreferredWidth(0);
-        subscribtion_list_table.getColumnModel().getColumn(4).setMaxWidth(0);
+        if (subscribtion_list_table.getColumnModel().getColumnCount() > 0) {
+            subscribtion_list_table.getColumnModel().getColumn(0).setMinWidth(50);
+            subscribtion_list_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+            subscribtion_list_table.getColumnModel().getColumn(0).setMaxWidth(50);
+            subscribtion_list_table.getColumnModel().getColumn(3).setMinWidth(0);
+            subscribtion_list_table.getColumnModel().getColumn(3).setPreferredWidth(0);
+            subscribtion_list_table.getColumnModel().getColumn(3).setMaxWidth(0);
+            subscribtion_list_table.getColumnModel().getColumn(4).setMinWidth(0);
+            subscribtion_list_table.getColumnModel().getColumn(4).setPreferredWidth(0);
+            subscribtion_list_table.getColumnModel().getColumn(4).setMaxWidth(0);
+        }
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 126, 419, 194));
+        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 113, 439, -1));
 
         jButton1.setText("START");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -153,56 +167,10 @@ public class LaunchingFrame extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(98, 326, -1, 25));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(subscription_list, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(presentation_name, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(61, Short.MAX_VALUE))
-            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addContainerGap(276, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(presentation_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(subscription_list, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
-                .addContainerGap(43, Short.MAX_VALUE))
-        );
+        jLabel3.setText("jLabel3");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 450, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -388,6 +356,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField presentation_name;
