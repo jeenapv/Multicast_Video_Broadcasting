@@ -127,11 +127,11 @@ public class LaunchingFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "No", "Organisation", "Sending complete", "port", "ip"
+                "No", "Organisation", "Sending progress", "port", "ip"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, true, true
@@ -146,17 +146,15 @@ public class LaunchingFrame extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(subscribtion_list_table);
-        if (subscribtion_list_table.getColumnModel().getColumnCount() > 0) {
-            subscribtion_list_table.getColumnModel().getColumn(0).setMinWidth(50);
-            subscribtion_list_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-            subscribtion_list_table.getColumnModel().getColumn(0).setMaxWidth(50);
-            subscribtion_list_table.getColumnModel().getColumn(3).setMinWidth(0);
-            subscribtion_list_table.getColumnModel().getColumn(3).setPreferredWidth(0);
-            subscribtion_list_table.getColumnModel().getColumn(3).setMaxWidth(0);
-            subscribtion_list_table.getColumnModel().getColumn(4).setMinWidth(0);
-            subscribtion_list_table.getColumnModel().getColumn(4).setPreferredWidth(0);
-            subscribtion_list_table.getColumnModel().getColumn(4).setMaxWidth(0);
-        }
+        subscribtion_list_table.getColumnModel().getColumn(0).setMinWidth(50);
+        subscribtion_list_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        subscribtion_list_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        subscribtion_list_table.getColumnModel().getColumn(3).setMinWidth(0);
+        subscribtion_list_table.getColumnModel().getColumn(3).setPreferredWidth(0);
+        subscribtion_list_table.getColumnModel().getColumn(3).setMaxWidth(0);
+        subscribtion_list_table.getColumnModel().getColumn(4).setMinWidth(0);
+        subscribtion_list_table.getColumnModel().getColumn(4).setPreferredWidth(0);
+        subscribtion_list_table.getColumnModel().getColumn(4).setMaxWidth(0);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 126, 419, 194));
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 113, 439, -1));
@@ -198,11 +196,10 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     System.out.println("organisationName " + organisationName);
                     System.out.println("ipAddress " + ipAddress);
                     System.out.println("port " + port);
-                    sendFileToOrganisation(organisationName, ipAddress, port, presentationFile);
-                    subscribtion_list_table.setValueAt(true, i, 2);
+                    sendFileToOrganisation(organisationName, ipAddress, port, presentationFile, i);
+//                    subscribtion_list_table.setValueAt(true, i, 2);
                     // sending logic here
                 }
-                JOptionPane.showMessageDialog(rootPane, "Presentation is on air");
             }
 
         } catch (Exception e) {
@@ -223,11 +220,32 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         int ftpPort;
         String ipAddress;
         File fileToBeSend;
+        int row;
 
-        private PresentationEmmiterThread(int ftpPort, String ipAddress, File fileToBeSend) {
+        private PresentationEmmiterThread(int ftpPort, String ipAddress, File fileToBeSend, int row) {
             this.ftpPort = ftpPort;
             this.ipAddress = ipAddress;
             this.fileToBeSend = fileToBeSend;
+            this.row = row;
+        }
+
+        class EachPacket {
+
+            int head;
+            String dataContent;
+            int length;
+
+            public void setHead(int head) {
+                this.head = head;
+            }
+
+            public void setDataContent(String dataContent) {
+                this.dataContent = dataContent;
+            }
+
+            public void setLength(int length) {
+                this.length = length;
+            }
         }
 
         public void run() {
@@ -253,9 +271,14 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 long fileLength = fileToBeSend.length();
                 long current = 0;
 
+                int counter = 0;
+
                 long start = System.nanoTime();
                 while (current != fileLength) {
                     int size = 10000;
+                    EachPacket eachPacket = new EachPacket();
+                    eachPacket.setHead(counter);
+                    counter++;
                     if (fileLength - current >= size) {
                         current += size;
                     } else {
@@ -263,9 +286,13 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                         current = fileLength;
                     }
                     contents = new byte[size];
+                    eachPacket.setDataContent(new String(contents));
+                    eachPacket.setLength(size);
                     bis.read(contents, 0, size);
                     os.write(contents);
-                    System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!");
+                    int percentagee = (int) ((current * 100) / fileLength);
+                    System.out.println("Sending file ... " + percentagee + "% complete!");
+                    subscribtion_list_table.setValueAt(percentagee + " %", row, 2);
                 }
 
                 os.flush();
@@ -280,13 +307,13 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
     }
 
-    private void sendFileToOrganisation(String organisation, String ipAddress, String port, File fileToBeSend) {
+    private void sendFileToOrganisation(String organisation, String ipAddress, String port, File fileToBeSend, int row) {
         System.out.println("Sending file " + fileToBeSend.getPath());
         System.out.println("To " + ipAddress + " with port " + port);
 
         int ftpPort = generateNewFTPPort(3000, 9999);
 
-        new PresentationEmmiterThread(ftpPort, ipAddress, fileToBeSend).start();
+        new PresentationEmmiterThread(ftpPort, ipAddress, fileToBeSend, row).start();
         String vedioActivationString = Configuration.adminIp + deLimiter + ftpPort + deLimiter + fileToBeSend.getName();
 
         DataSender dataSender = new DataSender();
