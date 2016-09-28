@@ -219,6 +219,11 @@ public class AdminHome extends javax.swing.JFrame {
 
         jButton13.setToolTipText("HEIRARCHICAL VIEW");
         jButton13.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(302, 398, 81, 69));
 
         jLabel4.setText("jLabel4");
@@ -404,6 +409,13 @@ private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     viewAllOrganisations.setVisible(true);
     this.dispose();
 }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        HerarchicalTree herarchicalTree=new HerarchicalTree();
+        herarchicalTree.setVisible(true);
+    }//GEN-LAST:event_jButton13ActionPerformed
 
     /**
      * @param args the command line arguments

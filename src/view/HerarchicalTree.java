@@ -6,6 +6,7 @@
 
 package view;
 
+import General.Configuration;
 import db.Dbcon;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,10 +27,11 @@ public class HerarchicalTree extends javax.swing.JFrame {
         initComponents();
          loadTree();
         this.setLocationRelativeTo(null);
+         Configuration.setIconOnLabel("heirarchy-background.jpg", jLabel2);
     }
     private void loadTree(){
    
-        DefaultTreeModel model = (DefaultTreeModel) jTree1.getModel();
+        DefaultTreeModel model = (DefaultTreeModel) jTree2.getModel();
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
        
             
@@ -91,6 +93,7 @@ public class HerarchicalTree extends javax.swing.JFrame {
             for (String ar2 : arr2) {
                 DefaultMutableTreeNode defaultMutableTreeNode2 = new DefaultMutableTreeNode(ar2);
                 for (String ar3 : arr3) {
+                    System.err.println("adding " + ar3);
                     DefaultMutableTreeNode defaultMutableTreeNode3 = new DefaultMutableTreeNode(ar3);
                     defaultMutableTreeNode2.add(defaultMutableTreeNode3);
                 }
@@ -98,6 +101,9 @@ public class HerarchicalTree extends javax.swing.JFrame {
             }
             root.add(defaultMutableTreeNode);
         }
+        jTree2.repaint();
+        jTree2.revalidate();
+        root.setUserObject("multicast");
     }
 
     /**
@@ -109,47 +115,32 @@ public class HerarchicalTree extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTree2 = new javax.swing.JTree();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
-        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jTree1.setEditable(true);
-        jTree1.setEnabled(false);
-        jTree1.setExpandsSelectedPaths(false);
-        jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTree1MouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jTree1);
+        jTree2.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jTree2.setMaximumSize(new java.awt.Dimension(59, 50));
+        jTree2.setPreferredSize(new java.awt.Dimension(59, 50));
+        jScrollPane2.setViewportView(jTree2);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(68, 68, 68)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(163, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(140, Short.MAX_VALUE))
-        );
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 54, 278, 208));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("MULTICAST HEIRARCHY");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 240, 25));
+
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 410, 310));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
-        // TODO add your handling code here:
-       
-    }//GEN-LAST:event_jTree1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -187,7 +178,9 @@ public class HerarchicalTree extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTree jTree1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTree jTree2;
     // End of variables declaration//GEN-END:variables
 }

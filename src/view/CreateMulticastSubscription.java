@@ -168,6 +168,13 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
         String sub = "";
         String subscription_name = jTextField1.getText();
         String description = jTextArea1.getText();
+        if(subscription_name.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter subscription name");
+        }else if(description.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter description");
+        }else{
+            
+      
         Dbcon dbcon = new Dbcon();
         
         int ins = dbcon.insert("insert into tbl_subscription(subscription_name,description,created_at)values('" + subscription_name + "','" + description + "','" + System.currentTimeMillis() + "')");
@@ -204,7 +211,7 @@ public class CreateMulticastSubscription extends javax.swing.JFrame {
             AdminHome adminHome = new AdminHome();
             adminHome.setVisible(true);
         }
-
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
     
     private void updatesubscriptionList() {
