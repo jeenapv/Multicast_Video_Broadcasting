@@ -36,13 +36,13 @@ public class HerarchicalTree extends javax.swing.JFrame {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 
         ArrayList<String> arr = new ArrayList<>();
-
+        String country_id="";
         Dbcon dbcon = new Dbcon();
         ResultSet rs = dbcon.select("select * from tbl_country");
         try {
             while (rs.next()) {
                 String countryName = rs.getString("country_name");
-
+                country_id=rs.getString("country_id");
                 arr.add(countryName);
                 System.out.println(countryName);
                 System.out.println(arr);
@@ -53,12 +53,12 @@ public class HerarchicalTree extends javax.swing.JFrame {
         }
 
         ArrayList<String> arr2 = new ArrayList<>();
-
-        ResultSet r = dbcon.select("select * from tbl_state");
+        String state_id="";
+        ResultSet r = dbcon.select("select * from tbl_state where country='"+country_id+"'");
         try {
             while (r.next()) {
                 String stateName = r.getString("state_name");
-
+                state_id=r.getString("state_id");
                 arr2.add(stateName);
                 System.out.println(stateName);
                 System.out.println(arr2);
@@ -70,7 +70,7 @@ public class HerarchicalTree extends javax.swing.JFrame {
 
         ArrayList<String> arr3 = new ArrayList<>();
 
-        ResultSet rst = dbcon.select("select * from tbl_organization");
+        ResultSet rst = dbcon.select("select * from tbl_organization where country='"+country_id+"' and state='"+state_id+"'");
         try {
             while (rst.next()) {
                 String orgName = rst.getString("organization_name");
@@ -119,6 +119,7 @@ public class HerarchicalTree extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree2 = new javax.swing.JTree();
         jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -130,18 +131,33 @@ public class HerarchicalTree extends javax.swing.JFrame {
         jTree2.setPreferredSize(new java.awt.Dimension(59, 50));
         jScrollPane2.setViewportView(jTree2);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 54, 278, 208));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 54, 278, 300));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MULTICAST HEIRARCHY");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 240, 25));
 
+        jButton1.setText("HOME");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 380, -1, -1));
+
         jLabel2.setText("jLabel2");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 410, 310));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 410, 430));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        AdminHome home=new AdminHome();
+        home.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,6 +195,7 @@ public class HerarchicalTree extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
