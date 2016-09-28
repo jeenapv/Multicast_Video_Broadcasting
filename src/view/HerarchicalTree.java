@@ -108,13 +108,13 @@ public class HerarchicalTree extends javax.swing.JFrame {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 
         ArrayList<String> arr = new ArrayList<>();
-
+        String country_id="";
         Dbcon dbcon = new Dbcon();
         ResultSet rs = dbcon.select("select * from tbl_country");
         try {
             while (rs.next()) {
                 String countryName = rs.getString("country_name");
-
+                country_id=rs.getString("country_id");
                 arr.add(countryName);
                 System.out.println(countryName);
                 System.out.println(arr);
@@ -125,12 +125,12 @@ public class HerarchicalTree extends javax.swing.JFrame {
         }
 
         ArrayList<String> arr2 = new ArrayList<>();
-
-        ResultSet r = dbcon.select("select * from tbl_state");
+        String state_id="";
+        ResultSet r = dbcon.select("select * from tbl_state where country='"+country_id+"'");
         try {
             while (r.next()) {
                 String stateName = r.getString("state_name");
-
+                state_id=r.getString("state_id");
                 arr2.add(stateName);
                 System.out.println(stateName);
                 System.out.println(arr2);
@@ -142,7 +142,7 @@ public class HerarchicalTree extends javax.swing.JFrame {
 
         ArrayList<String> arr3 = new ArrayList<>();
 
-        ResultSet rst = dbcon.select("select * from tbl_organization");
+        ResultSet rst = dbcon.select("select * from tbl_organization where country='"+country_id+"' and state='"+state_id+"'");
         try {
             while (rst.next()) {
                 String orgName = rst.getString("organization_name");
@@ -205,13 +205,18 @@ public class HerarchicalTree extends javax.swing.JFrame {
         jTree2.setPreferredSize(new java.awt.Dimension(59, 50));
         jScrollPane2.setViewportView(jTree2);
 
+<<<<<<< .mine
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 54, 430, 410));
+=======
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 54, 278, 300));
+>>>>>>> .theirs
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MULTICAST HEIRARCHY");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 240, 25));
 
+<<<<<<< .mine
         jButton1.setText("HOME");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,13 +225,29 @@ public class HerarchicalTree extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 440, -1, -1));
 
+=======
+        jButton1.setText("HOME");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 380, -1, -1));
+
+>>>>>>> .theirs
         jLabel2.setText("jLabel2");
+<<<<<<< .mine
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 670, 490));
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, -1, -1));
+=======
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 410, 430));
+
+>>>>>>> .theirs
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+<<<<<<< .mine
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
     AdminHome adminHome = new AdminHome();
@@ -235,6 +256,16 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     // TODO add your handling code here:
 }//GEN-LAST:event_jButton1ActionPerformed
 
+=======
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        AdminHome home=new AdminHome();
+        home.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+
+>>>>>>> .theirs
     /**
      * @param args the command line arguments
      */
