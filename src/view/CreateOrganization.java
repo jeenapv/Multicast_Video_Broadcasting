@@ -322,6 +322,7 @@ public class CreateOrganization extends javax.swing.JFrame {
             AdminHome adminHome = new AdminHome();
             adminHome.setVisible(true);
         } else{
+          
             JOptionPane.showMessageDialog(rootPane, "Connection failed, Please try after some time");
         }
         

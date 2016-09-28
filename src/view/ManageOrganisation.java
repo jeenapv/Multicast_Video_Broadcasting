@@ -215,12 +215,14 @@ public class ManageOrganisation extends javax.swing.JFrame {
                     name.setText(rs.getString("organization_name"));
                     description.setText(rs.getString("description"));
                     port.setText(rs.getString("port"));
-                    ip.setText(rs.getString(rs.getShort("ip_address")));
+                    ip.setText(rs.getString("ip_address"));
                     edit_button.setEnabled(true);
                     save_button.setEnabled(true);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
+            
 
         }
     }//GEN-LAST:event_tbl_orgMouseClicked

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import General.Configuration;
@@ -25,26 +24,25 @@ public class HerarchicalTree extends javax.swing.JFrame {
      */
     public HerarchicalTree() {
         initComponents();
-         loadTree();
+        loadTree();
         this.setLocationRelativeTo(null);
-         Configuration.setIconOnLabel("heirarchy-background.jpg", jLabel2);
+        Configuration.setIconOnLabel("heirarchy-background.jpg", jLabel2);
+        expandNodes();
     }
-    private void loadTree(){
-   
+
+    private void loadTree() {
+
         DefaultTreeModel model = (DefaultTreeModel) jTree2.getModel();
-            DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-       
-            
-            
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+
         ArrayList<String> arr = new ArrayList<>();
-        
-        
-         Dbcon dbcon = new Dbcon();
+
+        Dbcon dbcon = new Dbcon();
         ResultSet rs = dbcon.select("select * from tbl_country");
         try {
             while (rs.next()) {
                 String countryName = rs.getString("country_name");
-                
+
                 arr.add(countryName);
                 System.out.println(countryName);
                 System.out.println(arr);
@@ -53,42 +51,40 @@ public class HerarchicalTree extends javax.swing.JFrame {
 
             ex.printStackTrace();
         }
-       
-       
+
         ArrayList<String> arr2 = new ArrayList<>();
-        
-        
+
         ResultSet r = dbcon.select("select * from tbl_state");
         try {
             while (r.next()) {
                 String stateName = r.getString("state_name");
-              
+
                 arr2.add(stateName);
-                  System.out.println(stateName);
-                  System.out.println(arr2);
+                System.out.println(stateName);
+                System.out.println(arr2);
             }
         } catch (SQLException ex) {
 
             ex.printStackTrace();
         }
- 
+
         ArrayList<String> arr3 = new ArrayList<>();
-             
+
         ResultSet rst = dbcon.select("select * from tbl_organization");
         try {
             while (rst.next()) {
                 String orgName = rst.getString("organization_name");
-               
+
                 arr3.add(orgName);
-                 System.out.println(orgName);
-                 System.out.println(arr3);
+                System.out.println(orgName);
+                System.out.println(arr3);
             }
         } catch (SQLException ex) {
 
             ex.printStackTrace();
-        }      
+        }
        
-        for(String ar : arr) {
+        for (String ar : arr) {
             DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(ar);
             for (String ar2 : arr2) {
                 DefaultMutableTreeNode defaultMutableTreeNode2 = new DefaultMutableTreeNode(ar2);
@@ -97,13 +93,18 @@ public class HerarchicalTree extends javax.swing.JFrame {
                     DefaultMutableTreeNode defaultMutableTreeNode3 = new DefaultMutableTreeNode(ar3);
                     defaultMutableTreeNode2.add(defaultMutableTreeNode3);
                 }
-                defaultMutableTreeNode.add(defaultMutableTreeNode2);               
+                defaultMutableTreeNode.add(defaultMutableTreeNode2);
             }
             root.add(defaultMutableTreeNode);
         }
         jTree2.repaint();
         jTree2.revalidate();
         root.setUserObject("multicast");
+    }
+    private void expandNodes(){
+         for (int i = 0; i < jTree2.getRowCount(); i++) {
+            jTree2.expandRow(i);
+        }
     }
 
     /**
